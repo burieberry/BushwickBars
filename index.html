@@ -3,12 +3,35 @@
 <head>
   <title>Neighborhood Map</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    html,
+    body {
+      font-family: Arial, sans-serif;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      height: 100%;
+    }
+  </style>
 </head>
 <body>
-<h1>Neigborhood Map</h1>
+<div id="map"></div>
+<script>
+  var map;
+  function initMap() {
+    // Constructor creates a new map - only center and zoom are required.
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 40.7413549, lng: -73.9980244},
+      zoom: 13
+    });
+  }
+</script>
 
-<script src="http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCVhzLWUa0SkOHF8FAAZDw9KQYl2EcL9ew"></script>
-<script src="knockout-3.4.1.js"></script>
+<script async defer src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCa4KpuiP-TagaPCyb40gaVNCZi2MMD3C0&callback=initMap"></script>
+<script src="bower_components/knockout/dist/knockout.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
