@@ -92,7 +92,11 @@
       marker.addListener('click', function() {
         populateInfoWindow(this, largeInfoWindow);
       });
+      bounds.extend(markers[i].position);
     }
+
+    // Extend the boundaries of the map for each marker.
+    map.fitBounds(bounds);
   }
 
   // populate info window when a marker is clicked
