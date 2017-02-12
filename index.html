@@ -147,7 +147,21 @@
     document.getElementById('hide-listings').addEventListener('click', hideListings);
   }
 
-  // populate infowindow when a marker is clicked
+  // Loop through markers array and show all markers
+  function showListings() {
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setMap(map);
+    };
+  }
+
+  // Loop through markers and set them to null
+  function hideListings() {
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    };
+  }
+
+  // Populate infowindow when a marker is clicked
   function populateInfoWindow(marker, infoWindow) {
     // Check to make sure the infowindow is not already opened on this marker
     if (infoWindow.marker != marker) {
