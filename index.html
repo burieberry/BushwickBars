@@ -34,7 +34,7 @@
     map = new google.maps.Map(document.getElementById('map'), {
       // Bushwich, Brooklyn
       center: { lat: 40.694428, lng: -73.921286 },
-      zoom: 14
+      zoom: 13
     });
 
 
@@ -53,7 +53,7 @@
       content: 'Heavy Woods'
     });
 
-    // event listener for info window
+    // event listener for infowindow
     marker.addListener('click', function() {
       infoWindow.open(map, marker);
     });
@@ -88,7 +88,7 @@
       // Push the marker into array of markers.
       markers.push(marker);
 
-      // Create onclick event to open an info window for each marker.
+      // Create onclick event to open an infowindow for each marker.
       marker.addListener('click', function() {
         populateInfoWindow(this, largeInfoWindow);
       });
@@ -99,10 +99,19 @@
     map.fitBounds(bounds);
   }
 
-  // populate info window when a marker is clicked
+  // populate infowindow when a marker is clicked
   function populateInfoWindow(marker, infoWindow) {
-    infoWindow.setContent(marker.title);
-    infoWindow.open(map, marker);
+    // Check to make sure the infowindow is not already opened on this marker.
+    if (infoWindow.marker != marker) {
+      infoWindow.marker = marker;
+      infoWindow.setContent('<div>' + marker.title + '</div>');
+      infoWindow.open(map, marker);
+
+      // Make sure the marker property is cleared if the infowindow is closed.
+      infoWindow.addListener('closeclick', function() {
+        infoWindow.setMarker = null;
+      });
+    }
   }
 </script>
 
