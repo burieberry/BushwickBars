@@ -34,11 +34,11 @@
     map = new google.maps.Map(document.getElementById('map'), {
       // Bushwich, Brooklyn
       center: { lat: 40.694428, lng: -73.921286 },
-      zoom: 13
+      zoom: 14
     });
 
 
-
+/* Single point marker
 
     // Marker for Heavy Woods
     var heavyWoods = { lat: 40.705606, lng: -73.921648 };
@@ -58,11 +58,33 @@
       infoWindow.open(map, marker);
     });
 
+*/
 
+    // Bars around Bushwick, Brooklyn, NYC
+    var locations = [
+      {title: 'Heavy Woods', location: {lat: 40.705606, lng: -73.921648}},
+      {title: 'Pearl\'s Social & Billy Club', location: {lat: 40.707065, lng: -73.921355}},
+      {title: 'Sally Roots', location: {lat: 40.702754, lng: -73.916373}},
+      {title: 'The Rookery Bar', location: {lat: 40.707404, lng: -73.922462}},
+      {title: 'Boobie Trap', location: {lat: 40.70015, lng: -73.91604}}
+    ];
 
+    // Use the location array to create an array of markers on initialize
+    for (var i = 0; i < locations.length; i++) {
+      // Get the position from location array
+      var position = locations[i].location;
+      var title = locations[i].title;
 
+      // Create a marker per location, and put into markers array
+      var marker = new google.maps.Marker({
+        position: position,
+        map: map,
+        title: title
+      });
 
-
+      // Push the marker into array of markers
+      markers.push(marker);
+    }
 
   }
 </script>
