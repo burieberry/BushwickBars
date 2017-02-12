@@ -24,19 +24,18 @@
 <body>
 <div id="map"></div>
 <script>
-  // global map object.
+  // global map object
   var map;
-  // global blank marker array.
+  // global blank marker array
   var markers = [];
 
   function initMap() {
     // Constructor to create a new map.
     map = new google.maps.Map(document.getElementById('map'), {
-      // Bushwich, Brooklyn
+      // center is Bushwich, Brooklyn
       center: { lat: 40.694428, lng: -73.921286 },
       zoom: 13
     });
-
 
 /* Single point marker
 
@@ -60,7 +59,7 @@
 
 */
 
-    // Bars around Bushwick, Brooklyn, NYC.
+    // Locations array for bars around Bushwick, Brooklyn
     var locations = [
       {title: 'Heavy Woods', location: {lat: 40.705606, lng: -73.921648}},
       {title: 'Pearl\'s Social & Billy Club', location: {lat: 40.707065, lng: -73.921355}},
@@ -82,7 +81,9 @@
       var marker = new google.maps.Marker({
         position: position,
         map: map,
-        title: title
+        title: title,
+        animation: google.maps.Animation.DROP,
+        id: i
       });
 
       // Push the marker into array of markers.
