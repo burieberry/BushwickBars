@@ -73,7 +73,7 @@
   var markers = [];
 
   function initMap() {
-    // Constructor to create a new map.
+    // Constructor to create a new map
     map = new google.maps.Map(document.getElementById('map'), {
       // center is Bushwich, Brooklyn
       center: { lat: 40.694428, lng: -73.921286 },
@@ -114,13 +114,13 @@
     var largeInfoWindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
 
-    // Use the location array to create an array of markers on initialize.
+    // Use the location array to create an array of markers on initialize
     for (var i = 0; i < locations.length; i++) {
       // Get the position from location array
       var position = locations[i].location;
       var title = locations[i].title;
 
-      // Create a marker per location, and put into markers array.
+      // Create a marker per location, and put into markers array
       var marker = new google.maps.Marker({
         position: position,
         map: map,
@@ -132,26 +132,30 @@
       // Push the marker into array of markers.
       markers.push(marker);
 
-      // Create onclick event to open an infowindow for each marker.
+      // Create onclick event to open an infowindow for each marker
       marker.addListener('click', function() {
         populateInfoWindow(this, largeInfoWindow);
       });
       bounds.extend(markers[i].position);
     }
 
-    // Extend the boundaries of the map for each marker.
+    // Extend the boundaries of the map for each marker
     map.fitBounds(bounds);
+
+    // Add event-listeners for show/hide listings buttons
+    document.getElementById('show-listings').addEventListener('click', showListings);
+    document.getElementById('hide-listings').addEventListener('click', hideListings);
   }
 
   // populate infowindow when a marker is clicked
   function populateInfoWindow(marker, infoWindow) {
-    // Check to make sure the infowindow is not already opened on this marker.
+    // Check to make sure the infowindow is not already opened on this marker
     if (infoWindow.marker != marker) {
       infoWindow.marker = marker;
       infoWindow.setContent('<div>' + marker.title + '</div>');
       infoWindow.open(map, marker);
 
-      // Make sure the marker property is cleared if the infowindow is closed.
+      // Make sure the marker property is cleared if the infowindow is closed
       infoWindow.addListener('closeclick', function() {
         infoWindow.setMarker = null;
       });
