@@ -70,6 +70,7 @@
     ];
 
     var largeInfoWindow = new google.maps.InfoWindow();
+    var bounds = new google.maps.LatLngBounds();
 
     // Use the location array to create an array of markers on initialize.
     for (var i = 0; i < locations.length; i++) {
@@ -91,13 +92,12 @@
       marker.addListener('click', function() {
         populateInfoWindow(this, largeInfoWindow);
       });
+    }
 
-      // populate info window when a marker is clicked
-      function populateInfoWindow(marker, infoWindow) {
-        infoWindow.setContent(marker.title);
-        infoWindow.open(map, marker);
-      }
-
+    // populate info window when a marker is clicked
+    function populateInfoWindow(marker, infoWindow) {
+      infoWindow.setContent(marker.title);
+      infoWindow.open(map, marker);
     }
   }
 </script>
