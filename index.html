@@ -24,13 +24,13 @@
 <body>
 <div id="map"></div>
 <script>
-  // global map object
+  // global map object.
   var map;
-  // global blank marker array
+  // global blank marker array.
   var markers = [];
 
   function initMap() {
-    // Constructor to create a new map
+    // Constructor to create a new map.
     map = new google.maps.Map(document.getElementById('map'), {
       // Bushwich, Brooklyn
       center: { lat: 40.694428, lng: -73.921286 },
@@ -60,7 +60,7 @@
 
 */
 
-    // Bars around Bushwick, Brooklyn, NYC
+    // Bars around Bushwick, Brooklyn, NYC.
     var locations = [
       {title: 'Heavy Woods', location: {lat: 40.705606, lng: -73.921648}},
       {title: 'Pearl\'s Social & Billy Club', location: {lat: 40.707065, lng: -73.921355}},
@@ -69,23 +69,36 @@
       {title: 'Boobie Trap', location: {lat: 40.70015, lng: -73.91604}}
     ];
 
-    // Use the location array to create an array of markers on initialize
+    var largeInfoWindow = new google.maps.InfoWindow();
+
+    // Use the location array to create an array of markers on initialize.
     for (var i = 0; i < locations.length; i++) {
       // Get the position from location array
       var position = locations[i].location;
       var title = locations[i].title;
 
-      // Create a marker per location, and put into markers array
+      // Create a marker per location, and put into markers array.
       var marker = new google.maps.Marker({
         position: position,
         map: map,
         title: title
       });
 
-      // Push the marker into array of markers
+      // Push the marker into array of markers.
       markers.push(marker);
-    }
 
+      // Create onclick event to open an info window for each marker.
+      marker.addListener('click', function() {
+        populateInfoWindow(this, largeInfoWindow);
+      });
+
+      // populate info window when a marker is clicked
+      function populateInfoWindow(marker, infoWindow) {
+        infoWindow.setContent(marker.title);
+        infoWindow.open(map, marker);
+      }
+
+    }
   }
 </script>
 
