@@ -93,12 +93,12 @@
         populateInfoWindow(this, largeInfoWindow);
       });
     }
+  }
 
-    // populate info window when a marker is clicked
-    function populateInfoWindow(marker, infoWindow) {
-      infoWindow.setContent(marker.title);
-      infoWindow.open(map, marker);
-    }
+  // populate info window when a marker is clicked
+  function populateInfoWindow(marker, infoWindow) {
+    infoWindow.setContent(marker.title);
+    infoWindow.open(map, marker);
   }
 </script>
 
