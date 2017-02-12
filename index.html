@@ -24,20 +24,46 @@
 <body>
 <div id="map"></div>
 <script>
+  // global map object
   var map;
+  // global blank marker array
+  var markers = [];
+
   function initMap() {
     // Constructor to create a new map
     map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: 40.7413549, lng: -73.9980244 },
+      // Bushwich, Brooklyn
+      center: { lat: 40.694428, lng: -73.921286 },
       zoom: 13
     });
 
-    // var locationName = { lat: , lng: };
-    // var marker = new google.maps.Marker({
-    //   position: locationName,
-    //   map: map,
-    //   title: ''
-    // });
+
+
+
+    // Marker for Heavy Woods
+    var heavyWoods = { lat: 40.705606, lng: -73.921648 };
+    var marker = new google.maps.Marker({
+      position: heavyWoods,
+      map: map,
+      title: 'Heavy Woods'
+    });
+
+    // Info Window for Heavy Woods
+    var infoWindow = new google.maps.InfoWindow({
+      content: 'Heavy Woods'
+    });
+
+    // event listener for info window
+    marker.addListener('click', function() {
+      infoWindow.open(map, marker);
+    });
+
+
+
+
+
+
+
   }
 </script>
 
