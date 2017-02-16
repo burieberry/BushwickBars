@@ -26,12 +26,17 @@ function initMap() {
     // Get the position from location array
     var position = locations[i].location;
     var title = locations[i].title;
+    // image icon var
+    var defaultIcon;
+    var imageIcon = makeMarkerIcon('images/noun_448705_cc_martini.png');
+    // credit: Martini by Ralf Schmitzer from the Noun Project
 
     // Create a marker per location, and put into markers array
     var marker = new google.maps.Marker({
       position: position,
       map: map,
       title: title,
+      icon: defaultIcon,
       animation: google.maps.Animation.DROP,
       id: i
     });
@@ -43,11 +48,33 @@ function initMap() {
     marker.addListener('click', function() {
       populateInfoWindow(this, largeInfoWindow);
     });
+
+    // Event listeners for icon image
+    marker.addListener('mouseover', function() {
+      this.setIcon(imageIcon);
+    });
+    marker.addListener('mouseout', function() {
+      this.setIcon(defaultIcon);
+    });
   }
 
   // Add event-listeners for show/hide listings buttons
   document.getElementById('show-listings').addEventListener('click', showListings);
   document.getElementById('hide-listings').addEventListener('click', hideListings);
+
+  // Set default listing marker icon
+  defaultIcon = marker.icon;
+
+  // Creates new icon with given image
+  function makeMarkerIcon(imageIcon) {
+    var markerImage = new google.maps.MarkerImage(
+      imageIcon,
+      new google.maps.Size(50, 50),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(10, 34),
+      new google.maps.Size(50, 50));
+    return markerImage;
+  }
 }
 
 /* Loop through markers array and show all markers */
