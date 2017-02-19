@@ -12,6 +12,9 @@
       <h1>See Bars Around Bushwick</h1>
       <input type="button" id="show-listings" value="Show Listings">
       <input type="button" id="hide-listings" value="Hide Listings">
+      <ul id="locations-list" data-bind="foreach: locationList">
+        <li data-bind="text: title"></li>
+      </ul>
     </div>
     <div id="map"></div>
   </div>

@@ -1,5 +1,29 @@
+// for Google Maps
 var map; // global map object
 var markers = []; // global blank marker array
+
+// Locations array for bars around Bushwick, Brooklyn
+var locations = [
+  {title: 'Heavy Woods', location: {lat: 40.705606, lng: -73.921648}},
+  {title: 'Pearl\'s Social & Billy Club', location: {lat: 40.707065, lng: -73.921355}},
+  {title: 'Sally Roots', location: {lat: 40.702754, lng: -73.916373}},
+  {title: 'The Rookery Bar', location: {lat: 40.707404, lng: -73.922462}},
+  {title: 'Boobie Trap', location: {lat: 40.70015, lng: -73.91604}}
+];
+
+var Location = function(data) {
+  this.title = ko.observable(data.title);
+};
+
+var viewModel = function() {
+  var self = this;
+
+  this.locationList = ko.observableArray();
+
+  locations.forEach(function(locItem) {
+    self.locationList.push(new Location(locItem));
+  });
+};
 
 /* Initiate map */
 function initMap() {
@@ -9,15 +33,6 @@ function initMap() {
     center: { lat: 40.703811, lng: -73.918425 },
     zoom: 15
   });
-
-  // Locations array for bars around Bushwick, Brooklyn
-  var locations = [
-    {title: 'Heavy Woods', location: {lat: 40.705606, lng: -73.921648}},
-    {title: 'Pearl\'s Social & Billy Club', location: {lat: 40.707065, lng: -73.921355}},
-    {title: 'Sally Roots', location: {lat: 40.702754, lng: -73.916373}},
-    {title: 'The Rookery Bar', location: {lat: 40.707404, lng: -73.922462}},
-    {title: 'Boobie Trap', location: {lat: 40.70015, lng: -73.91604}}
-  ];
 
   var largeInfoWindow = new google.maps.InfoWindow();
 
@@ -105,3 +120,6 @@ function populateInfoWindow(marker, infoWindow) {
     });
   }
 }
+
+// activate knockout
+ko.applyBindings(new viewModel());
