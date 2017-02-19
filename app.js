@@ -1,7 +1,3 @@
-// for Google Maps
-var map; // global map object
-var markers = []; // global blank marker array
-
 // Locations array for bars around Bushwick, Brooklyn
 var locations = [
   {title: 'Heavy Woods', location: {lat: 40.705606, lng: -73.921648}},
@@ -24,7 +20,18 @@ var viewModel = function() {
   locations.forEach(function(locItem) {
     self.locationList.push(new Location(locItem));
   });
+
+  this.showInfo = function() {
+    console.log(this);
+    showInfo();
+  };
 };
+
+
+/* Google Maps */
+
+var map; // global map object
+var markers = []; // global blank marker array
 
 /* Initiate map */
 function initMap() {
@@ -32,14 +39,13 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     // center is Bushwich, Brooklyn, Dekalb L station
     center: { lat: 40.703811, lng: -73.918425 },
-    zoom: 15
+    zoom: 15,
+    mapTypeControl: false
   });
-
-  var largeInfoWindow = new google.maps.InfoWindow();
 
   // Use the location array to create an array of markers on initialize
   for (var i = 0; i < locations.length; i++) {
-    // Get the position from location array
+    // Get the position from markers array
     var position = locations[i].location;
     var title = locations[i].title;
     var defaultIcon;
@@ -48,8 +54,8 @@ function initMap() {
     // Create a marker per location, and put into markers array
     var marker = new google.maps.Marker({
       position: position,
-      map: map,
       title: title,
+      map: map,
       icon: defaultIcon,
       animation: google.maps.Animation.DROP,
       id: i
@@ -58,9 +64,14 @@ function initMap() {
     // Push the marker into array of markers.
     markers.push(marker);
 
+    var largeInfoWindow = new google.maps.InfoWindow();
+
+    // Set default listing marker icon
+    defaultIcon = marker.icon;
+
     // Create onclick event to open an infowindow for each marker
     marker.addListener('click', function() {
-      populateInfoWindow(this, largeInfoWindow);
+      populateInfowindow(this, largeInfoWindow);
       for (var i = 0; i < markers.length; i++) {
         markers[i].setIcon(defaultIcon);
       }
@@ -71,21 +82,19 @@ function initMap() {
   // Add event-listeners for show/hide listings buttons
   document.getElementById('show-listings').addEventListener('click', showListings);
   document.getElementById('hide-listings').addEventListener('click', hideListings);
+}
 
-  // Set default listing marker icon
-  defaultIcon = marker.icon;
 
-  // Creates new icon with given image
-  function makeMarkerIcon(markerColor) {
-    var markerImage = new google.maps.MarkerImage(
-      'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
-      '|40|_|%E2%80%A2',
-      new google.maps.Size(24, 40),
-      new google.maps.Point(0, 0),
-      new google.maps.Point(12, 40),
-      new google.maps.Size(24, 40));
-    return markerImage;
-  }
+// Creates new marker icon with given color
+function makeMarkerIcon(markerColor) {
+  var markerImage = new google.maps.MarkerImage(
+    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+    '|40|_|%E2%80%A2',
+    new google.maps.Size(24, 40),
+    new google.maps.Point(0, 0),
+    new google.maps.Point(12, 40),
+    new google.maps.Size(24, 40));
+  return markerImage;
 }
 
 /* Loop through markers array and show all markers */
@@ -107,8 +116,14 @@ function hideListings() {
   }
 }
 
+function showInfo(){
+  var info = new google.maps.InfoWindow();
+  info.setContent('<div>' +  + '</div>');
+  info.open(map);
+}
+
 /* Populate infowindow when a marker is clicked */
-function populateInfoWindow(marker, infoWindow) {
+function populateInfowindow(marker, infoWindow) {
   // Check to make sure the infowindow is not already opened on this marker
   if (infoWindow.marker != marker) {
     infoWindow.marker = marker;
