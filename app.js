@@ -26,10 +26,8 @@ function initMap() {
     // Get the position from location array
     var position = locations[i].location;
     var title = locations[i].title;
-    // image icon var
     var defaultIcon;
-    var imageIcon = makeMarkerIcon('images/noun_448705_cc_martini.png');
-    // credit: Martini by Ralf Schmitzer from the Noun Project
+    var highlightedIcon = makeMarkerIcon('42adf4');
 
     // Create a marker per location, and put into markers array
     var marker = new google.maps.Marker({
@@ -47,14 +45,10 @@ function initMap() {
     // Create onclick event to open an infowindow for each marker
     marker.addListener('click', function() {
       populateInfoWindow(this, largeInfoWindow);
-    });
-
-    // Event listeners for icon image
-    marker.addListener('mouseover', function() {
-      this.setIcon(imageIcon);
-    });
-    marker.addListener('mouseout', function() {
-      this.setIcon(defaultIcon);
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setIcon(defaultIcon);
+      }
+      this.setIcon(highlightedIcon);
     });
   }
 
@@ -66,13 +60,14 @@ function initMap() {
   defaultIcon = marker.icon;
 
   // Creates new icon with given image
-  function makeMarkerIcon(imageIcon) {
+  function makeMarkerIcon(markerColor) {
     var markerImage = new google.maps.MarkerImage(
-      imageIcon,
-      new google.maps.Size(50, 50),
+      'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+      '|40|_|%E2%80%A2',
+      new google.maps.Size(24, 40),
       new google.maps.Point(0, 0),
-      new google.maps.Point(10, 34),
-      new google.maps.Size(50, 50));
+      new google.maps.Point(12, 40),
+      new google.maps.Size(24, 40));
     return markerImage;
   }
 }
