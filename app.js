@@ -5,9 +5,9 @@ var markers = []; // global blank marker array
 function initMap() {
   // Constructor to create a new map
   map = new google.maps.Map(document.getElementById('map'), {
-    // center is Bushwich, Brooklyn
-    center: { lat: 40.694428, lng: -73.921286 },
-    zoom: 13
+    // center is Bushwich, Brooklyn, Dekalb L station
+    center: { lat: 40.703811, lng: -73.918425 },
+    zoom: 15
   });
 
   // Locations array for bars around Bushwick, Brooklyn
