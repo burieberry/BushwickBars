@@ -21,6 +21,7 @@ var viewModel = function() {
     self.locationList.push(new Location(locItem));
   });
 
+  // TODO
   this.showInfo = function() {
     console.log(this);
     showInfo();
@@ -31,7 +32,7 @@ var viewModel = function() {
 /* Google Maps */
 
 var map; // global map object
-var markers = []; // global blank marker array
+var markers = []; // initialize global locations empty array
 
 /* Initiate map */
 function initMap() {
@@ -116,6 +117,8 @@ function hideListings() {
   }
 }
 
+
+// TODO
 function showInfo(){
   var info = new google.maps.InfoWindow();
   info.setContent('<div>' +  + '</div>');
