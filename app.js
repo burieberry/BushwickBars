@@ -56,7 +56,6 @@ function initMap() {
     var marker = new google.maps.Marker({
       position: position,
       title: title,
-      map: map,
       icon: defaultIcon,
       animation: google.maps.Animation.DROP,
       id: i
@@ -64,6 +63,9 @@ function initMap() {
 
     // Push the marker into array of markers.
     markers.push(marker);
+
+    // show all listings when map loads
+    showListings();
 
     var largeInfoWindow = new google.maps.InfoWindow();
 
