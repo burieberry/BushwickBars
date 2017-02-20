@@ -21,10 +21,13 @@ var viewModel = function() {
     self.locationList.push(new Location(locItem));
   });
 
-  // TODO
-  this.showInfo = function() {
-    console.log(this);
-    showInfo();
+  // set first location as the display location
+  this.displayLoc = ko.observable(this.locationList()[0]);
+
+  // set clicked location as display location
+  this.setLoc = function(loc) {
+    self.displayLoc(loc);
+    queryLocation();
   };
 };
 
@@ -33,17 +36,20 @@ var viewModel = function() {
 
 var map; // global map object
 var markers = []; // initialize global locations empty array
+var service,
+    largeInfoWindow;
 
 /* Initiate map */
 function initMap() {
   // Constructor to create a new map
   map = new google.maps.Map(document.getElementById('map'), {
-    // center is Bushwich, Brooklyn, Dekalb L station
+    // center is Bushwick, Brooklyn, Dekalb L station
     center: { lat: 40.703811, lng: -73.918425 },
     zoom: 15,
     mapTypeControl: false
   });
 
+  // TODO: REFACTOR CREATE MARKER FUNCTIONS
   // Use the location array to create an array of markers on initialize
   for (var i = 0; i < locations.length; i++) {
     // Get the position from markers array
@@ -56,18 +62,18 @@ function initMap() {
     var marker = new google.maps.Marker({
       position: position,
       title: title,
+      map: map,
       icon: defaultIcon,
-      animation: google.maps.Animation.DROP,
       id: i
     });
 
     // Push the marker into array of markers.
     markers.push(marker);
 
+    largeInfoWindow = new google.maps.InfoWindow();
+
     // show all listings when map loads
     showListings();
-
-    var largeInfoWindow = new google.maps.InfoWindow();
 
     // Set default listing marker icon
     defaultIcon = marker.icon;
@@ -119,13 +125,40 @@ function hideListings() {
   }
 }
 
+function queryLocation() {
+  var placeData = document.getElementById('display-title').innerHTML;
+  var bushwick = new google.maps.LatLng(40.703811, -73.918425);
 
-// TODO
-function showInfo(){
-  var info = new google.maps.InfoWindow();
-  info.setContent('<div>' +  + '</div>');
-  info.open(map);
+  var request = {
+    location: bushwick,
+    query: placeData,
+    radius: '500'
+  };
+
+
+  service = new google.maps.places.PlacesService(map);
+  service.textSearch(request, callback);
 }
+
+function callback(results, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    createMarker(results[0]);
+  };
+}
+
+
+function createMarker(placeData) {
+  var name = placeData.name;   // name of the place from the place service
+
+  var marker = new google.maps.Marker({
+    position: placeData.geometry.location,
+    title: name,
+    map: map
+  });
+
+  populateInfowindow(marker, largeInfoWindow);
+}
+
 
 /* Populate infowindow when a marker is clicked */
 function populateInfowindow(marker, infoWindow) {

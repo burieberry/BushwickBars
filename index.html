@@ -8,18 +8,21 @@
 </head>
 <body>
   <div class="container">
-    <div class="options-box">
+    <div class="options-box" data-bind="with: displayLoc">
       <h1>See Bars Around Bushwick</h1>
       <input type="button" id="show-listings" value="Show Listings">
       <input type="button" id="hide-listings" value="Hide Listings">
-      <ul id="locations-list" data-bind="foreach: locationList">
-        <li data-bind="text: title, click: $parent.showInfo"></li>
+      <ul id="locations-list" data-bind="foreach: $parent.locationList">
+        <li id="location" data-bind="text: title, click: $root.setLoc"></li>
       </ul>
+      <div>
+        <h2 id="display-title" data-bind="text: title"></h2>
+      </div>
     </div>
     <div id="map"></div>
   </div>
 
-<script async defer src="http://maps.googleapis.com/maps/api/js?&libraries=places&key=AIzaSyCa4KpuiP-TagaPCyb40gaVNCZi2MMD3C0&callback=initMap"></script>
+<script async defer src="http://maps.googleapis.com/maps/api/js?&key=AIzaSyCa4KpuiP-TagaPCyb40gaVNCZi2MMD3C0&libraries=places&callback=initMap"></script>
 <script src="bower_components/knockout/dist/knockout.js"></script>
 <script src="app.js"></script>
 </body>
