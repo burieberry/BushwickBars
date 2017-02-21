@@ -10,6 +10,7 @@
   <div class="container">
     <div class="options-box" data-bind="with: displayLoc">
       <h1>See Bars Around Bushwick</h1>
+      <input type="form" id="filter" data-bind="value: title">
       <input type="button" id="show-listings" value="Show Listings"
         data-bind="click: $root.showListings">
       <input type="button" id="hide-listings" value="Hide Listings"

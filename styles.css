@@ -35,6 +35,11 @@ h1 {
   right: 0px;
 }
 
+#filter {
+  display: block;
+  width: 96%;
+}
+
 .options-box {
   background: #fff;
   border: 1px solid #999;
