@@ -10,8 +10,10 @@
   <div class="container">
     <div class="options-box" data-bind="with: displayLoc">
       <h1>See Bars Around Bushwick</h1>
-      <input type="button" id="show-listings" value="Show Listings">
-      <input type="button" id="hide-listings" value="Hide Listings">
+      <input type="button" id="show-listings" value="Show Listings"
+        data-bind="click: $root.showListings">
+      <input type="button" id="hide-listings" value="Hide Listings"
+        data-bind="click: $root.hideListings">
       <ul id="locations-list" data-bind="foreach: $parent.locationList">
         <li id="location" data-bind="text: title, click: $root.setLoc"></li>
       </ul>

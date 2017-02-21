@@ -21,6 +21,16 @@ var viewModel = function() {
     self.locationList.push(new Location(locItem));
   });
 
+  // show all locations
+  this.showListings = function() {
+    showListings();
+  }
+
+  // hide all locations on map
+  this.hideListings = function() {
+    hideListings();
+  }
+
   // set first location as the display location
   this.displayLoc = ko.observable(this.locationList()[0]);
 
@@ -87,10 +97,6 @@ function initMap() {
       this.setIcon(highlightedIcon);
     });
   }
-
-  // Add event-listeners for show/hide listings buttons
-  document.getElementById('show-listings').addEventListener('click', showListings);
-  document.getElementById('hide-listings').addEventListener('click', hideListings);
 }
 
 
@@ -155,6 +161,9 @@ function createMarker(placeData) {
     title: name,
     map: map
   });
+
+  // TODO: AFTER REFACTORING, THIS SHOULDN'T ADD DUPLICATE LISTINGS IN ARRAY
+  markers.push(marker);
 
   populateInfowindow(marker, largeInfoWindow);
 }
