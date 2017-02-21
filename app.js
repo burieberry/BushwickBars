@@ -16,10 +16,21 @@ var viewModel = function() {
   var self = this;
 
   this.locationList = ko.observableArray();
+  this.locName = ko.observable("");
 
   locations.forEach(function(locItem) {
     self.locationList.push(new Location(locItem));
   });
+
+  this.filterLocations = ko.computed(function() {
+    self.locationList().forEach(function(locItem) {
+      if (self.locName() === locItem.title()) {
+        self.locationList = [];
+        self.locationList.push(locItem);
+        self.setLoc(locItem);
+      };
+    });
+  }, this);
 
   // show all locations
   this.showListings = function() {
