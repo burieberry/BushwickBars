@@ -38,6 +38,7 @@ var viewModel = function() {
   this.setLoc = function(loc) {
     self.displayLoc(loc);
     queryLocation();
+    // TODO: STOP CREATING NEW MARKERS FOR EXISTING LOCATIONS
   };
 };
 
@@ -46,8 +47,12 @@ var viewModel = function() {
 
 var map; // global map object
 var markers = []; // initialize global locations empty array
-var service,
+var position,
+    title,
+    service,
     largeInfoWindow;
+var defaultIcon,
+    highlightedIcon;
 
 /* Initiate map */
 function initMap() {
@@ -59,44 +64,16 @@ function initMap() {
     mapTypeControl: false
   });
 
-  // TODO: REFACTOR CREATE MARKER FUNCTIONS
+  largeInfoWindow = new google.maps.InfoWindow();
+  highlightedIcon = makeMarkerIcon('42adf4');
+
   // Use the location array to create an array of markers on initialize
   for (var i = 0; i < locations.length; i++) {
     // Get the position from markers array
-    var position = locations[i].location;
-    var title = locations[i].title;
-    var defaultIcon;
-    var highlightedIcon = makeMarkerIcon('42adf4');
-
-    // Create a marker per location, and put into markers array
-    var marker = new google.maps.Marker({
-      position: position,
-      title: title,
-      map: map,
-      icon: defaultIcon,
-      id: i
-    });
-
-    // Push the marker into array of markers.
-    markers.push(marker);
-
-    largeInfoWindow = new google.maps.InfoWindow();
-
-    // show all listings when map loads
-    showListings();
-
-    // Set default listing marker icon
-    defaultIcon = marker.icon;
-
-    // Create onclick event to open an infowindow for each marker
-    marker.addListener('click', function() {
-      populateInfowindow(this, largeInfoWindow);
-      for (var i = 0; i < markers.length; i++) {
-        markers[i].setIcon(defaultIcon);
-      }
-      this.setIcon(highlightedIcon);
-    });
-  }
+    var name = locations[i].title;
+    var location = locations[i].location;
+    createMarker(name, location);
+  };
 }
 
 
@@ -110,6 +87,70 @@ function makeMarkerIcon(markerColor) {
     new google.maps.Point(12, 40),
     new google.maps.Size(24, 40));
   return markerImage;
+}
+
+function queryLocation() {
+  var place = document.getElementById('display-title').innerHTML;
+  var bushwick = new google.maps.LatLng(40.703811, -73.918425);
+
+  var request = {
+    location: bushwick,
+    query: place,
+    radius: '500'
+  };
+
+  service = new google.maps.places.PlacesService(map);
+  service.textSearch(request, callback);
+}
+
+function callback(results, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    var name = results[0].name;
+    var location = results[0].geometry.location;
+    var marker = createMarker(name, location);
+    populateInfowindow(marker, largeInfoWindow);
+  };
+}
+
+function createMarker(name, location) {
+  var marker = new google.maps.Marker({
+    position: location,
+    title: name,
+    map: map,
+    icon: defaultIcon
+  });
+
+  // Push the marker into array of markers.
+  markers.push(marker);
+
+  // Set default listing marker icon
+  defaultIcon = marker.icon;
+
+  // Create onclick event to open an infowindow for each marker
+  marker.addListener('click', function() {
+    populateInfowindow(this, largeInfoWindow);
+  });
+
+  return marker;
+}
+
+/* Populate infowindow when a marker is clicked */
+function populateInfowindow(marker, infoWindow) {
+  // Check to make sure the infowindow is not already opened on this marker
+  if (infoWindow.marker != marker) {
+    infoWindow.marker = marker;
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setIcon(defaultIcon);
+    }
+    marker.setIcon(highlightedIcon);
+    infoWindow.setContent('<div>' + marker.title + '</div>');
+    infoWindow.open(map, marker);
+
+    // Make sure the marker property is cleared if the infowindow is closed
+    infoWindow.addListener('closeclick', function() {
+      infoWindow.setMarker = null;
+    });
+  }
 }
 
 /* Loop through markers array and show all markers */
@@ -128,59 +169,6 @@ function showListings() {
 function hideListings() {
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
-  }
-}
-
-function queryLocation() {
-  var placeData = document.getElementById('display-title').innerHTML;
-  var bushwick = new google.maps.LatLng(40.703811, -73.918425);
-
-  var request = {
-    location: bushwick,
-    query: placeData,
-    radius: '500'
-  };
-
-
-  service = new google.maps.places.PlacesService(map);
-  service.textSearch(request, callback);
-}
-
-function callback(results, status) {
-  if (status == google.maps.places.PlacesServiceStatus.OK) {
-    createMarker(results[0]);
-  };
-}
-
-
-function createMarker(placeData) {
-  var name = placeData.name;   // name of the place from the place service
-
-  var marker = new google.maps.Marker({
-    position: placeData.geometry.location,
-    title: name,
-    map: map
-  });
-
-  // TODO: AFTER REFACTORING, THIS SHOULDN'T ADD DUPLICATE LISTINGS IN ARRAY
-  markers.push(marker);
-
-  populateInfowindow(marker, largeInfoWindow);
-}
-
-
-/* Populate infowindow when a marker is clicked */
-function populateInfowindow(marker, infoWindow) {
-  // Check to make sure the infowindow is not already opened on this marker
-  if (infoWindow.marker != marker) {
-    infoWindow.marker = marker;
-    infoWindow.setContent('<div>' + marker.title + '</div>');
-    infoWindow.open(map, marker);
-
-    // Make sure the marker property is cleared if the infowindow is closed
-    infoWindow.addListener('closeclick', function() {
-      infoWindow.setMarker = null;
-    });
   }
 }
 
