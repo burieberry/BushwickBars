@@ -51,6 +51,12 @@ var viewModel = function() {
     queryLocation();
     // TODO: STOP CREATING NEW MARKERS FOR EXISTING LOCATIONS
   };
+
+  this.cancel = function() {
+    locations.forEach(function(locItem) {
+      // TODO CANCEL FILTER BUTTON
+    });
+  }
 };
 
 
