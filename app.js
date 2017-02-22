@@ -8,37 +8,36 @@ var locations = [
 ];
 
 var Location = function(data) {
+  'use strict';
   this.title = ko.observable(data.title);
   this.location = ko.observable(data.location);
 };
 
 var viewModel = function() {
+  'use strict';
   var self = this;
 
-  this.locationList = ko.observableArray();
-  this.locName = ko.observable("");
+  this.locationList = ko.observableArray([]);
 
-  locations.forEach(function(locItem) {
-    self.locationList.push(new Location(locItem));
-  });
-
-  this.filterLocations = ko.computed(function() {
-    self.locationList().forEach(function(locItem) {
-      if (self.locName() === locItem.title()) {
-        self.locationList = [];
-        self.locationList.push(locItem);
-        self.setLoc(locItem);
-      };
+  this.initList = function() {
+    'use strict';
+    self.locationList([]);
+    locations.forEach(function(locItem) {
+      self.locationList.push(new Location(locItem));
     });
-  }, this);
+  }
+
+  this.initList();
 
   // show all locations
   this.showListings = function() {
+    'use strict';
     showListings();
   }
 
   // hide all locations on map
   this.hideListings = function() {
+    'use strict';
     hideListings();
   }
 
@@ -47,16 +46,41 @@ var viewModel = function() {
 
   // set clicked location as display location
   this.setLoc = function(loc) {
+    'use strict';
     self.displayLoc(loc);
     queryLocation();
     // TODO: STOP CREATING NEW MARKERS FOR EXISTING LOCATIONS
   };
 
+
+  this.locItem = ko.observable();
+
+  this.searchValue = ko.pureComputed({
+    read: function() {
+      'use strict';
+      return this.locItem();
+    },
+    write: function(value) {
+      'use strict';
+      this.locItem(value);
+      self.locationList().forEach(function(loc) {
+        if (value.toString().toLowerCase() === loc.title().toString().toLowerCase()) {
+          // not case-sensitive
+          self.locationList([loc]);
+          self.setLoc(loc);
+        } else if (value.toString() === '') {
+          self.initList();
+        };
+      });
+    },
+    owner: this
+});
+
   this.cancel = function() {
-    locations.forEach(function(locItem) {
-      // TODO CANCEL FILTER BUTTON
-    });
-  }
+    'use strict';
+    // TODO: clear search bar
+    self.initList();
+  };
 };
 
 
@@ -73,6 +97,7 @@ var defaultIcon,
 
 /* Initiate map */
 function initMap() {
+  'use strict';
   // Constructor to create a new map
   map = new google.maps.Map(document.getElementById('map'), {
     // center is Bushwick, Brooklyn, Dekalb L station
@@ -96,6 +121,7 @@ function initMap() {
 
 // Creates new marker icon with given color
 function makeMarkerIcon(markerColor) {
+  'use strict';
   var markerImage = new google.maps.MarkerImage(
     'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
     '|40|_|%E2%80%A2',
@@ -107,6 +133,7 @@ function makeMarkerIcon(markerColor) {
 }
 
 function queryLocation() {
+  'use strict';
   var place = document.getElementById('display-title').innerHTML;
   var bushwick = new google.maps.LatLng(40.703811, -73.918425);
 
@@ -121,6 +148,7 @@ function queryLocation() {
 }
 
 function callback(results, status) {
+  'use strict';
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     var name = results[0].name;
     var location = results[0].geometry.location;
@@ -130,6 +158,7 @@ function callback(results, status) {
 }
 
 function createMarker(name, location) {
+  'use strict';
   var marker = new google.maps.Marker({
     position: location,
     title: name,
@@ -145,6 +174,7 @@ function createMarker(name, location) {
 
   // Create onclick event to open an infowindow for each marker
   marker.addListener('click', function() {
+    'use strict';
     populateInfowindow(this, largeInfoWindow);
   });
 
@@ -153,6 +183,7 @@ function createMarker(name, location) {
 
 /* Populate infowindow when a marker is clicked */
 function populateInfowindow(marker, infoWindow) {
+  'use strict';
   // Check to make sure the infowindow is not already opened on this marker
   if (infoWindow.marker != marker) {
     infoWindow.marker = marker;
@@ -172,6 +203,7 @@ function populateInfowindow(marker, infoWindow) {
 
 /* Loop through markers array and show all markers */
 function showListings() {
+  'use strict';
   var bounds = new google.maps.LatLngBounds();
 
   // Extend the boundaries of the map for each marker and display each marker
@@ -184,6 +216,7 @@ function showListings() {
 
 /* Loop through markers and hide all markers */
 function hideListings() {
+  'use strict';
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
   }
