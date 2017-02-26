@@ -20,15 +20,9 @@ var viewModel = function() {
   this.locationList = ko.observableArray([]);
   this.newArray = ko.observableArray([]);
 
-  // this.initList = function() {
-  //   'use strict';
-  //   self.locationList([]);
-    locations.forEach(function(locItem) {
-      self.locationList.push(new Location(locItem));
-    });
-  // }
-
-  // this.initList();
+  locations.forEach(function(locItem) {
+    self.locationList.push(new Location(locItem));
+  });
 
   this.refreshList = function(list) {
     'use strict';
@@ -36,18 +30,6 @@ var viewModel = function() {
       self.setLoc(listItem);
     });
   };
-
-  // // show all locations
-  // this.showListings = function() {
-  //   'use strict';
-  //   showListings();
-  // }
-
-  // // hide all locations on map
-  // this.hideListings = function() {
-  //   'use strict';
-  //   hideListings();
-  // }
 
   // set first location as the display location
   this.displayLoc = ko.observable(this.locationList()[0]);
@@ -74,14 +56,9 @@ var viewModel = function() {
       };
       this.newArray = this.locationList().filter(this.checkList);
       self.refreshList(this.newArray);
-  },
+    },
     owner: this
-});
-
-  // this.cancel = function() {
-  //   'use strict';
-  //   // TODO: cancel button
-  // };
+  });
 };
 
 
@@ -204,27 +181,6 @@ function populateInfowindow(marker, infoWindow) {
     });
   }
 }
-
-// /* Loop through markers array and show all markers */
-// function showListings() {
-//   'use strict';
-//   var bounds = new google.maps.LatLngBounds();
-
-//   // Extend the boundaries of the map for each marker and display each marker
-//   for (var i = 0; i < markers.length; i++) {
-//     markers[i].setMap(map);
-//     bounds.extend(markers[i].position);
-//   }
-//   map.fitBounds(bounds);
-// }
-
-// /* Loop through markers and hide all markers */
-// function hideListings() {
-//   'use strict';
-//   for (var i = 0; i < markers.length; i++) {
-//     markers[i].setMap(null);
-//   }
-// }
 
 // activate knockout
 ko.applyBindings(new viewModel());
