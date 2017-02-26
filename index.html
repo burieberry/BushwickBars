@@ -12,13 +12,16 @@
       <h1>See Bars Around Bushwick</h1>
       <input type="form" id="filter" data-bind="textInput: $root.searchValue"
         placeholder="Search">
-      <input type="button" id="cancel" value="Cancel" data-bind="click: $root.cancel">
-      <input type="button" id="show-listings" value="Show Listings"
+      <!-- <input type="button" id="cancel" value="Cancel" data-bind="click: $root.cancel"> -->
+      <!-- <input type="button" id="show-listings" value="Show Listings"
         data-bind="click: $root.showListings">
       <input type="button" id="hide-listings" value="Hide Listings"
-        data-bind="click: $root.hideListings">
-      <ul id="locations-list" data-bind="foreach: $root.locationList">
+        data-bind="click: $root.hideListings"> -->
+      <ul id="locations-list" data-bind="foreach: $root.locationList, visible: $root.newArray.length === 0">
         <li id="location" data-bind="text: title, click: $root.setLoc"></li>
+      </ul>
+      <ul id="filtered-list" data-bind="foreach: $root.newArray, visible: $root.newArray.length > 0">
+        <li id="filtered-location" data-bind="text: title, click: $root.setLoc"></li>
       </ul>
       <div>
         <h2 id="display-title" data-bind="text: title"></h2>

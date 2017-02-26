@@ -18,28 +18,36 @@ var viewModel = function() {
   var self = this;
 
   this.locationList = ko.observableArray([]);
+  this.newArray = ko.observableArray([]);
 
-  this.initList = function() {
-    'use strict';
-    self.locationList([]);
+  // this.initList = function() {
+  //   'use strict';
+  //   self.locationList([]);
     locations.forEach(function(locItem) {
       self.locationList.push(new Location(locItem));
     });
-  }
+  // }
 
-  this.initList();
+  // this.initList();
 
-  // show all locations
-  this.showListings = function() {
+  this.refreshList = function(list) {
     'use strict';
-    showListings();
-  }
+    list.forEach(function(listItem) {
+      self.setLoc(listItem);
+    });
+  };
 
-  // hide all locations on map
-  this.hideListings = function() {
-    'use strict';
-    hideListings();
-  }
+  // // show all locations
+  // this.showListings = function() {
+  //   'use strict';
+  //   showListings();
+  // }
+
+  // // hide all locations on map
+  // this.hideListings = function() {
+  //   'use strict';
+  //   hideListings();
+  // }
 
   // set first location as the display location
   this.displayLoc = ko.observable(this.locationList()[0]);
@@ -61,35 +69,19 @@ var viewModel = function() {
     },
     write: function(value) {
       'use strict';
-    //   this.locItem(value);
-    //   self.locationList().forEach(function(loc) {
-    //     if (value.toString().toLowerCase() === loc.title().toString().toLowerCase()) {
-    //       // not case-sensitive
-    //       self.locationList([loc]);
-    //       self.setLoc(loc);
-    //     } else if (value.toString() === '') {
-    //       self.initList();
-    //     };
-    //   });
-    // },
-
-    this.checkList = function(item) {
-      return item.title().toLowerCase() === value.toLowerCase();
-    };
-
-    this.newArray = ko.observableArray([]);
-    this.newArray = this.locationList().filter(this.checkList);
-    console.log(this.newArray);
-    // TODO: CHANGE CONTENTS OF LOCATIONLIST WITH NEWARRAY
+      this.checkList = function(item) {
+        return item.title().toLowerCase() === value.toLowerCase();
+      };
+      this.newArray = this.locationList().filter(this.checkList);
+      self.refreshList(this.newArray);
   },
     owner: this
 });
 
-  this.cancel = function() {
-    'use strict';
-    // TODO: clear search bar
-    self.initList();
-  };
+  // this.cancel = function() {
+  //   'use strict';
+  //   // TODO: cancel button
+  // };
 };
 
 
@@ -115,6 +107,7 @@ function initMap() {
     mapTypeControl: false
   });
 
+  var bounds = new google.maps.LatLngBounds();
   largeInfoWindow = new google.maps.InfoWindow();
   highlightedIcon = makeMarkerIcon('42adf4');
 
@@ -123,8 +116,10 @@ function initMap() {
     // Get the position from markers array
     var name = locations[i].title;
     var location = locations[i].location;
+    bounds.extend(locations[i].location);
     createMarker(name, location);
   };
+  map.fitBounds(bounds);
 }
 
 
@@ -210,26 +205,26 @@ function populateInfowindow(marker, infoWindow) {
   }
 }
 
-/* Loop through markers array and show all markers */
-function showListings() {
-  'use strict';
-  var bounds = new google.maps.LatLngBounds();
+// /* Loop through markers array and show all markers */
+// function showListings() {
+//   'use strict';
+//   var bounds = new google.maps.LatLngBounds();
 
-  // Extend the boundaries of the map for each marker and display each marker
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(map);
-    bounds.extend(markers[i].position);
-  }
-  map.fitBounds(bounds);
-}
+//   // Extend the boundaries of the map for each marker and display each marker
+//   for (var i = 0; i < markers.length; i++) {
+//     markers[i].setMap(map);
+//     bounds.extend(markers[i].position);
+//   }
+//   map.fitBounds(bounds);
+// }
 
-/* Loop through markers and hide all markers */
-function hideListings() {
-  'use strict';
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(null);
-  }
-}
+// /* Loop through markers and hide all markers */
+// function hideListings() {
+//   'use strict';
+//   for (var i = 0; i < markers.length; i++) {
+//     markers[i].setMap(null);
+//   }
+// }
 
 // activate knockout
 ko.applyBindings(new viewModel());
