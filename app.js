@@ -74,11 +74,13 @@ var viewModel = function() {
     // },
 
     this.checkList = function(item) {
-      return item.title.toLowerCase() === value.toLowerCase();
+      return item.title().toLowerCase() === value.toLowerCase();
     };
 
-    var newArray = locations.filter(this.checkList);
-    console.log(newArray);
+    this.newArray = ko.observableArray([]);
+    this.newArray = this.locationList().filter(this.checkList);
+    console.log(this.newArray);
+    // TODO: CHANGE CONTENTS OF LOCATIONLIST WITH NEWARRAY
   },
     owner: this
 });
