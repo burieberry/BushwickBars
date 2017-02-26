@@ -52,7 +52,6 @@ var viewModel = function() {
     // TODO: STOP CREATING NEW MARKERS FOR EXISTING LOCATIONS
   };
 
-
   this.locItem = ko.observable();
 
   this.searchValue = ko.pureComputed({
@@ -62,17 +61,25 @@ var viewModel = function() {
     },
     write: function(value) {
       'use strict';
-      this.locItem(value);
-      self.locationList().forEach(function(loc) {
-        if (value.toString().toLowerCase() === loc.title().toString().toLowerCase()) {
-          // not case-sensitive
-          self.locationList([loc]);
-          self.setLoc(loc);
-        } else if (value.toString() === '') {
-          self.initList();
-        };
-      });
-    },
+    //   this.locItem(value);
+    //   self.locationList().forEach(function(loc) {
+    //     if (value.toString().toLowerCase() === loc.title().toString().toLowerCase()) {
+    //       // not case-sensitive
+    //       self.locationList([loc]);
+    //       self.setLoc(loc);
+    //     } else if (value.toString() === '') {
+    //       self.initList();
+    //     };
+    //   });
+    // },
+
+    this.checkList = function(item) {
+      return item.title.toLowerCase() === value.toLowerCase();
+    };
+
+    var newArray = locations.filter(this.checkList);
+    console.log(newArray);
+  },
     owner: this
 });
 
