@@ -17,19 +17,15 @@ var viewModel = function() {
   'use strict';
   var self = this;
 
+  // initial location array
   this.locationList = ko.observableArray([]);
-  this.newArray = ko.observableArray([]);
+  // filtered location array
+  this.filteredArray = ko.observableArray([]);
 
+  // push locations to locationList array
   locations.forEach(function(locItem) {
     self.locationList.push(new Location(locItem));
   });
-
-  this.refreshList = function(list) {
-    'use strict';
-    list.forEach(function(listItem) {
-      self.setLoc(listItem);
-    });
-  };
 
   // set first location as the display location
   this.displayLoc = ko.observable(this.locationList()[0]);
@@ -42,20 +38,29 @@ var viewModel = function() {
     // TODO: STOP CREATING NEW MARKERS FOR EXISTING LOCATIONS
   };
 
-  this.locItem = ko.observable();
+  // takes in an array, sets location to list item
+  this.refreshList = function(list) {
+    'use strict';
+    list.forEach(function(listItem) {
+      self.setLoc(listItem);
+    });
+  };
 
+  // filter functionality
+  this.enteredValue = ko.observable();
   this.searchValue = ko.pureComputed({
     read: function() {
       'use strict';
-      return this.locItem();
+      return this.enteredValue();
     },
     write: function(value) {
       'use strict';
+      this.enteredValue = value;
       this.checkList = function(item) {
         return item.title().toLowerCase() === value.toLowerCase();
       };
-      this.newArray = this.locationList().filter(this.checkList);
-      self.refreshList(this.newArray);
+      this.filteredArray = this.locationList().filter(this.checkList);
+      self.refreshList(this.filteredArray);
     },
     owner: this
   });
