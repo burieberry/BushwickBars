@@ -1,16 +1,16 @@
 // Locations array for bars around Bushwick, Brooklyn
 var locations = [
-  {title: 'Heavy Woods', location: {lat: 40.705606, lng: -73.921648}},
-  {title: 'Pearl\'s Social & Billy Club', location: {lat: 40.707065, lng: -73.921355}},
-  {title: 'Sally Roots', location: {lat: 40.702754, lng: -73.916373}},
-  {title: 'The Rookery Bar', location: {lat: 40.707404, lng: -73.922462}},
-  {title: 'Boobie Trap', location: {lat: 40.70015, lng: -73.91604}}
+  {title: 'Heavy Woods', position: {lat: 40.705606, lng: -73.921648}},
+  {title: 'Pearl\'s Social & Billy Club', position: {lat: 40.707065, lng: -73.921355}},
+  {title: 'Sally Roots', position: {lat: 40.702754, lng: -73.916373}},
+  {title: 'The Rookery Bar', position: {lat: 40.707404, lng: -73.922462}},
+  {title: 'Boobie Trap', position: {lat: 40.70015, lng: -73.91604}}
 ];
 
 var Location = function(data) {
   'use strict';
   this.title = ko.observable(data.title);
-  this.location = ko.observable(data.location);
+  this.location = ko.observable(data.position);
 };
 
 var viewModel = function() {
@@ -27,6 +27,7 @@ var viewModel = function() {
     self.locationList.push(new Location(locItem));
   });
 
+
   // set first location as the display location
   this.displayLoc = ko.observable(this.locationList()[0]);
 
@@ -35,7 +36,6 @@ var viewModel = function() {
     'use strict';
     self.displayLoc(loc);
     queryLocation();
-    // TODO: STOP CREATING NEW MARKERS FOR EXISTING LOCATIONS
   };
 
   // takes in an array, sets location to list item
@@ -97,11 +97,35 @@ function initMap() {
   for (var i = 0; i < locations.length; i++) {
     // Get the position from markers array
     var name = locations[i].title;
-    var location = locations[i].location;
-    bounds.extend(locations[i].location);
+    var location = locations[i].position;
+    bounds.extend(locations[i].position);
     createMarker(name, location);
   };
   map.fitBounds(bounds);
+}
+
+function createMarker(name, location) {
+  'use strict';
+  var marker = new google.maps.Marker({
+    position: location,
+    title: name,
+    map: map,
+    icon: defaultIcon
+  });
+
+  // Push the marker into array of markers.
+  markers.push(marker);
+
+  // Set default listing marker icon
+  defaultIcon = marker.icon;
+
+  // Create onclick event to open an infowindow for each marker
+  marker.addListener('click', function() {
+    'use strict';
+    populateInfowindow(this, largeInfoWindow);
+  });
+
+  return marker;
 }
 
 
@@ -136,35 +160,13 @@ function queryLocation() {
 function callback(results, status) {
   'use strict';
   if (status == google.maps.places.PlacesServiceStatus.OK) {
-    var name = results[0].name;
-    var location = results[0].geometry.location;
-    var marker = createMarker(name, location);
-    populateInfowindow(marker, largeInfoWindow);
+    markers.forEach(function(marker) {
+      // compare queried place title with current markers' titles
+      if (results[0].name === marker.title) {
+        populateInfowindow(marker, largeInfoWindow);
+      };
+    });
   };
-}
-
-function createMarker(name, location) {
-  'use strict';
-  var marker = new google.maps.Marker({
-    position: location,
-    title: name,
-    map: map,
-    icon: defaultIcon
-  });
-
-  // Push the marker into array of markers.
-  markers.push(marker);
-
-  // Set default listing marker icon
-  defaultIcon = marker.icon;
-
-  // Create onclick event to open an infowindow for each marker
-  marker.addListener('click', function() {
-    'use strict';
-    populateInfowindow(this, largeInfoWindow);
-  });
-
-  return marker;
 }
 
 /* Populate infowindow when a marker is clicked */
