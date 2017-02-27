@@ -122,7 +122,8 @@ function createMarker(name, location) {
   marker.addListener('click', function() {
     'use strict';
     populateInfowindow(this, largeInfoWindow);
-    getDetails(this);
+    document.getElementById('display-title').innerHTML = marker.title;
+    queryLocation(marker.title, marker.position);
   });
 
   return marker;
@@ -140,12 +141,6 @@ function makeMarkerIcon(markerColor) {
     new google.maps.Point(12, 40),
     new google.maps.Size(24, 40));
   return markerImage;
-}
-
-function getDetails(marker) {
-  'use strict';
-  document.getElementById('display-title').innerHTML = marker.title;
-  queryLocation(marker.title, marker.position);
 }
 
 function queryLocation(locName, locLocation) {
@@ -173,7 +168,6 @@ function callback(results, status) {
         marker.rating = results[0].rating;
         marker.address = results[0].vicinity;
         marker.hours = results[0].opening_hours.open_now;
-        console.log(results[0]);
         document.getElementById('rating').innerHTML = marker.rating;
         document.getElementById('address').innerHTML = marker.address;
         if (marker.hours === true) {
