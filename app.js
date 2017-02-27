@@ -122,6 +122,7 @@ function createMarker(name, location) {
   marker.addListener('click', function() {
     'use strict';
     populateInfowindow(this, largeInfoWindow);
+    getDetails(this);
   });
 
   return marker;
@@ -141,6 +142,12 @@ function makeMarkerIcon(markerColor) {
   return markerImage;
 }
 
+function getDetails(marker) {
+  'use strict';
+  document.getElementById('display-title').innerHTML = marker.title;
+  queryLocation(marker.title, marker.position);
+}
+
 function queryLocation(locName, locLocation) {
   'use strict';
   // var place = document.getElementById('display-title').innerHTML;
@@ -153,7 +160,7 @@ function queryLocation(locName, locLocation) {
   };
 
   service = new google.maps.places.PlacesService(map);
-  service.nearbySearch(request,callback);
+  service.nearbySearch(request, callback);
 }
 
 function callback(results, status) {
@@ -162,6 +169,9 @@ function callback(results, status) {
     markers.forEach(function(marker) {
       // compare queried place title with current markers' titles
       if (results[0].name === marker.title) {
+        // marker.placeID = results[0].place_id;
+        marker.rating = results[0].rating;
+        document.getElementById('rating').innerHTML = marker.rating;
         populateInfowindow(marker, largeInfoWindow);
       };
     });
