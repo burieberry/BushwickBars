@@ -27,7 +27,6 @@ var viewModel = function() {
     self.locationList.push(new Location(locItem));
   });
 
-
   // set first location as the display location
   this.displayLoc = ko.observable(this.locationList()[0]);
 
@@ -35,7 +34,7 @@ var viewModel = function() {
   this.setLoc = function(loc) {
     'use strict';
     self.displayLoc(loc);
-    queryLocation();
+    queryLocation(loc.title(), loc.location());
   };
 
   // takes in an array, sets location to list item
@@ -142,19 +141,19 @@ function makeMarkerIcon(markerColor) {
   return markerImage;
 }
 
-function queryLocation() {
+function queryLocation(locName, locLocation) {
   'use strict';
-  var place = document.getElementById('display-title').innerHTML;
-  var bushwick = new google.maps.LatLng(40.703811, -73.918425);
+  // var place = document.getElementById('display-title').innerHTML;
+  // var bushwick = new google.maps.LatLng(40.703811, -73.918425);
 
   var request = {
-    location: bushwick,
-    query: place,
-    radius: '500'
+    name: locName,
+    location: locLocation,
+    radius: 100
   };
 
   service = new google.maps.places.PlacesService(map);
-  service.textSearch(request, callback);
+  service.nearbySearch(request,callback);
 }
 
 function callback(results, status) {
