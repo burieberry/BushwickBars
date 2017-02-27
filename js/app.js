@@ -35,6 +35,7 @@ var viewModel = function() {
     'use strict';
     self.displayLoc(loc);
     queryLocation(loc.title(), loc.location());
+    loadFoursquare(loc.title());
   };
 
   // takes in an array, sets location to list item
@@ -64,6 +65,39 @@ var viewModel = function() {
     owner: this
   });
 };
+
+
+/* Load FourSquare API */
+
+function loadFoursquare(locationName) {
+  locationName = locationName.replace(' ', '%20');
+
+  var foursquareUrl = 'https://api.foursquare.com/v2/venues/search' +
+                      '?v=20170226&ll=40.703811%2C%20-73.918425';
+
+  foursquareUrl += '&query=' + locationName + '&intent=checkin' +
+                  '&client_id=YLKSNFKXRYIL5ONUCCESUFXSP51JPYSHGPQYHBKMCOKBEWUU' +
+                  '&client_secret=JWWDPQVJI1FROTNRS5J0RZHHDGSJF3ZYG14WBEHSQ5BAZQRD';
+
+  $('#foursquare-header').empty().append('Foursquare Stats:');
+
+  $.ajax({
+      url: foursquareUrl,
+      dataType: 'jsonp'
+  }).done(function(result) {
+      console.log(result.response.venues[0]);
+
+      var tipCount = result.response.venues[0].stats.tipCount;
+      var checkinsCount = result.response.venues[0].stats.checkinsCount;
+      var usersCount = result.response.venues[0].stats.usersCount;
+
+      $('#foursquare-data').empty().append('Tip Count: ' + tipCount).append('<br>' +
+        'Checkins Count: ' + checkinsCount).append('<br>' +
+        'Users Count: ' + usersCount);
+  });
+
+  return false;
+}
 
 
 /* Google Maps */
@@ -125,6 +159,7 @@ function createMarker(name, location) {
     populateInfowindow(this, largeInfoWindow);
     document.getElementById('display-title').innerHTML = marker.title;
     queryLocation(marker.title, marker.position);
+    loadFoursquare(marker.title);
   });
 
   return marker;
