@@ -80,7 +80,7 @@ var defaultIcon,
 /* Initiate map */
 function initMap() {
   'use strict';
-  // Constructor to create a new map
+  // constructor to create a new map
   map = new google.maps.Map(document.getElementById('map'), {
     // center is Bushwick, Brooklyn, Dekalb L station
     center: { lat: 40.703811, lng: -73.918425 },
@@ -92,7 +92,7 @@ function initMap() {
   largeInfoWindow = new google.maps.InfoWindow();
   highlightedIcon = makeMarkerIcon('42adf4');
 
-  // Use the location array to create an array of markers on initialize
+  // use the locations array to call for marker creation and set bounds
   for (var i = 0; i < locations.length; i++) {
     // Get the position from markers array
     var name = locations[i].title;
@@ -103,6 +103,7 @@ function initMap() {
   map.fitBounds(bounds);
 }
 
+// create new marker on the given name and location
 function createMarker(name, location) {
   'use strict';
   var marker = new google.maps.Marker({
@@ -129,8 +130,7 @@ function createMarker(name, location) {
   return marker;
 }
 
-
-// Creates new marker icon with given color
+// create new icon for the marker with given color
 function makeMarkerIcon(markerColor) {
   'use strict';
   var markerImage = new google.maps.MarkerImage(
@@ -143,11 +143,9 @@ function makeMarkerIcon(markerColor) {
   return markerImage;
 }
 
+// use Places Library to find location
 function queryLocation(locName, locLocation) {
   'use strict';
-  // var place = document.getElementById('display-title').innerHTML;
-  // var bushwick = new google.maps.LatLng(40.703811, -73.918425);
-
   var request = {
     name: locName,
     location: locLocation,
@@ -158,6 +156,7 @@ function queryLocation(locName, locLocation) {
   service.nearbySearch(request, callback);
 }
 
+// return results of the location query with additional location details
 function callback(results, status) {
   'use strict';
   if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -181,7 +180,7 @@ function callback(results, status) {
   };
 }
 
-/* Populate infowindow when a marker is clicked */
+// populate infowindow when a marker is clicked
 function populateInfowindow(marker, infoWindow) {
   'use strict';
   // Check to make sure the infowindow is not already opened on this marker
