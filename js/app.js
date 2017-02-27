@@ -66,9 +66,10 @@ var viewModel = function() {
   });
 };
 
+// TODO: MOBILE VIEW, ERROR HANDLING
 
-/* Load FourSquare API */
 
+/* FourSquare API */
 function loadFoursquare(locationName) {
   locationName = locationName.replace(' ', '%20');
 
