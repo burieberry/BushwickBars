@@ -171,7 +171,16 @@ function callback(results, status) {
       if (results[0].name === marker.title) {
         // marker.placeID = results[0].place_id;
         marker.rating = results[0].rating;
+        marker.address = results[0].vicinity;
+        marker.hours = results[0].opening_hours.open_now;
+        console.log(results[0]);
         document.getElementById('rating').innerHTML = marker.rating;
+        document.getElementById('address').innerHTML = marker.address;
+        if (marker.hours === true) {
+          document.getElementById('hours').innerHTML = '<em class="open">Open Now!</em>';
+        } else {
+          document.getElementById('hours').innerHTML = '<em class="closed">Closed now.</em>';
+        }
         populateInfowindow(marker, largeInfoWindow);
       };
     });

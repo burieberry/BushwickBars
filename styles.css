@@ -54,3 +54,11 @@ h1 {
   text-align: left;
   width: 340px;
 }
+
+.open {
+  color: #00cc66;
+}
+
+.closed {
+  color: #ff5050;
+}
