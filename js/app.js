@@ -4,7 +4,8 @@ var locations = [
   {title: 'Pearl\'s Social & Billy Club', position: {lat: 40.707065, lng: -73.921355}},
   {title: 'Sally Roots', position: {lat: 40.702754, lng: -73.916373}},
   {title: 'The Rookery Bar', position: {lat: 40.707404, lng: -73.922462}},
-  {title: 'Boobie Trap', position: {lat: 40.70015, lng: -73.91604}}
+  {title: 'Boobie Trap', position: {lat: 40.70015, lng: -73.91604}},
+  {title: 'Bootleg Bar', position: {lat: 40.698762, lng: -73.917186}}
 ];
 
 var Location = function(data) {
@@ -64,9 +65,21 @@ var viewModel = function() {
     },
     owner: this
   });
+
+  // hamburger menu slider
+  this.menu = ko.observable();
+  this.slide = ko.pureComputed({
+    read: this.menu,
+    write: function() {
+      'use strict';
+      var drawer = document.getElementById('drawer');
+      drawer.classList.toggle('open');
+    },
+    owner: this
+  });
 };
 
-// TODO: MOBILE VIEW, ERROR HANDLING
+// ERROR HANDLING
 
 
 /* FourSquare API */
@@ -206,9 +219,9 @@ function callback(results, status) {
         document.getElementById('rating').innerHTML = marker.rating;
         document.getElementById('address').innerHTML = marker.address;
         if (marker.hours === true) {
-          document.getElementById('hours').innerHTML = '<em class="open">Open Now!</em>';
+          document.getElementById('hours').innerHTML = '<em class="loc-open">Open Now!</em>';
         } else {
-          document.getElementById('hours').innerHTML = '<em class="closed">Closed now.</em>';
+          document.getElementById('hours').innerHTML = '<em class="loc-closed">Closed now.</em>';
         }
         populateInfowindow(marker, largeInfoWindow);
       };

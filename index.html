@@ -7,9 +7,17 @@
   <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
-  <div class="container">
+<div class="container">
+  <header class="header">
+    <a id="menu" class="hamburger-icon" data-bind="click: slide">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"/>
+      </svg>
+    </a>
+    <h1>See Bars Around Bushwick</h1>
+  </header>
+  <nav id="drawer" class="nav">
     <div class="options-box" data-bind="with: displayLoc">
-      <h1>See Bars Around Bushwick</h1>
       <input type="form" id="filter" data-bind="textInput: $root.searchValue"
         placeholder="Search">
       <ul id="locations-list" data-bind="foreach: $root.locationList, visible: $root.filteredArray.length === 0">
@@ -18,6 +26,7 @@
       <ul id="filtered-list" data-bind="foreach: $root.filteredArray, visible: $root.filteredArray.length > 0">
         <li id="filtered-location" data-bind="text: title, click: $root.setLoc"></li>
       </ul>
+      <hr>
       <div>
         <h2 id="display-title" data-bind="text: title"></h2>
         <div>
@@ -27,10 +36,13 @@
         </div>
         <div class="foursquare-container">
           <h3 id="foursquare-header"></h3>
-          <p id="foursquare-data"></p>
+          <div id="foursquare-data"></div>
         </div>
       </div>
     </div>
+  </nav>
+  </div>
+
     <div id="map"></div>
   </div>
 
