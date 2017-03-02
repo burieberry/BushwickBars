@@ -79,7 +79,7 @@ var viewModel = function() {
   });
 };
 
-// ERROR HANDLING
+// ERROR HANDLING & readme file
 
 
 /* FourSquare API */
@@ -112,7 +112,6 @@ function loadFoursquare(locationName) {
 
   return false;
 }
-
 
 /* Google Maps */
 
