@@ -13,13 +13,9 @@ header, nav, div {
 .header {
     display: block;
     position: fixed;
-    width: 100%;
+    width: 340px;
     height: 50px;
     padding: 1em;
-    background-color: #fff;
-    border-bottom: 1px solid #999;
-    border-radius: 3px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
     z-index: 2;
   }
 
@@ -116,6 +112,14 @@ h1 {
     fill: #E0E0E0;
   }
 
+  .header {
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #999;
+    border-radius: 3px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  }
+
   .options-box {
     position: relative;
     width: 280px;
@@ -128,7 +132,7 @@ h1 {
     position: absolute;
     width: 280px;
     background-color: #fff;
-    opacity: 0.9;
+    opacity: 0.95;
     /* move drawer off canvas */
     transform: translate(-300px, 0);
       -webkit-transform: translate(-300px, 0);

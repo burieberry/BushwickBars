@@ -17,5 +17,5 @@ This app uses Knockout JS for its MVVM pattern.
 **Features:**
 - Clicking a marker on the map opens more information about that location.
 - Clicking a name in the list view opens the information window for the associated marker.
-- The list of locations is filterable with the text input in the Search bar. Filtering the list also filters the markers on the map.
+- The list of locations is filterable with the text input in the Search bar. Filtering the list also selects the corresponding marker on the map.
 - The web app is mobile responsive. Uses a hamburger menu icon to show/hide the list on small screens.

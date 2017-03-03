@@ -169,7 +169,6 @@ function createMarker(name, location) {
   // Create onclick event to open an infowindow for each marker
   marker.addListener('click', function() {
     'use strict';
-    populateInfowindow(this, largeInfoWindow);
     document.getElementById('display-title').innerHTML = marker.title;
     queryLocation(marker.title, marker.position);
     loadFoursquare(marker.title);
@@ -233,7 +232,6 @@ function populateInfowindow(marker, infoWindow) {
     marker.setIcon(highlightedIcon);
 
     var markerHours;
-
     if (marker.hours === true) {
       markerHours = '<em class="loc-open">Open Now!</em>';
     } else {
