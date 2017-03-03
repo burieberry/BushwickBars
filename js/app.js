@@ -28,8 +28,8 @@ var viewModel = function() {
     self.locationList.push(new Location(locItem));
   });
 
-  // set first location as the display location
-  this.displayLoc = ko.observable(this.locationList()[0]);
+  // set initial display location to blank
+  this.displayLoc = ko.observable(' ');
 
   // set clicked location as display location
   this.setLoc = function(loc) {
@@ -215,13 +215,6 @@ function callback(results, status) {
         marker.rating = results[0].rating;
         marker.address = results[0].vicinity;
         marker.hours = results[0].opening_hours.open_now;
-        document.getElementById('rating').innerHTML = marker.rating;
-        document.getElementById('address').innerHTML = marker.address;
-        if (marker.hours === true) {
-          document.getElementById('hours').innerHTML = '<em class="loc-open">Open Now!</em>';
-        } else {
-          document.getElementById('hours').innerHTML = '<em class="loc-closed">Closed now.</em>';
-        }
         populateInfowindow(marker, largeInfoWindow);
       };
     });
@@ -238,7 +231,19 @@ function populateInfowindow(marker, infoWindow) {
       markers[i].setIcon(defaultIcon);
     }
     marker.setIcon(highlightedIcon);
-    infoWindow.setContent('<div>' + marker.title + '</div>');
+
+    var markerHours;
+
+    if (marker.hours === true) {
+      markerHours = '<em class="loc-open">Open Now!</em>';
+    } else {
+      markerHours = '<em class="loc-closed">Closed now.</em>';
+    };
+
+    infoWindow.setContent('<div><strong>' + marker.title + '</strong><br>'
+                          + 'Rating: ' + marker.rating + '/5.0 <br>'
+                          +  marker.address + '<br>'
+                          + markerHours + '</div>');
     infoWindow.open(map, marker);
 
     // Make sure the marker property is cleared if the infowindow is closed
