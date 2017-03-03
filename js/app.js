@@ -79,8 +79,6 @@ var viewModel = function() {
   });
 };
 
-// ERROR HANDLING & readme file
-
 
 /* FourSquare API */
 function loadFoursquare(locationName) {
