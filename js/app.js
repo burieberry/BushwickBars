@@ -317,15 +317,15 @@ function populateInfowindow(marker, infoWindow, photoURL) {
       photo = '<em>Photo not available.</em>';
     } else {
       photo = '<img src="' + photoURL + '"><br>'
-                + '<small><em>Photo by Foursquare API.</em></small>';
+                + '<small><em>Photo by Foursquare API.</em></small> ';
     };
 
     infoWindow.setContent('<div><strong>' + marker.title + '</strong><br>'
                           + 'Rating: ' + marker.rating + '/5.0 <br>'
                           +  marker.address + '<br>'
                           + markerHours + '<br>'
-                          + '<small><em>Powered by Google Maps API.</em></small><br>'
                           + photo
+                          + '<small><em>Map powered by Google Maps API.</em></small>'
                           + '</div>');
     infoWindow.open(map, marker);
   }
