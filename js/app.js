@@ -10,8 +10,8 @@ var locations = [
 
 var Location = function(data) {
   'use strict';
-  this.title = ko.observable(data.title);
-  this.location = ko.observable(data.position);
+  this.title = data.title;
+  this.location = data.position;
 };
 
 var viewModel = function() {
@@ -35,8 +35,8 @@ var viewModel = function() {
   this.setLoc = function(loc) {
     'use strict';
     self.displayLoc(loc);
-    loadFoursquare(loc.title(), loc.location());
-    queryLocation(loc.title(), loc.location());
+    loadFoursquare(loc.title, loc.location);
+    queryLocation(loc.title, loc.location);
   };
 
   // takes in an array, sets location to list item
@@ -47,7 +47,7 @@ var viewModel = function() {
         marker.setMap(null);
     });
     list.forEach(function(listItem) {
-      createMarker(listItem.title(), listItem.location());
+      createMarker(listItem.title, listItem.location);
       self.displayLoc(listItem);
     });
   };
@@ -61,7 +61,7 @@ var viewModel = function() {
       'use strict';
       console.log(this.enteredValue());
       this.checkList = function(item) {
-        return item.title().toLowerCase().replace("\'", "").includes(value);
+        return item.title.toLowerCase().replace("\'", "").includes(value);
       };
 
       if (this.enteredValue() !== undefined) {
