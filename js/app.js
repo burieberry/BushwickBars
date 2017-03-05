@@ -152,6 +152,8 @@ var defaultIcon,
     highlightedIcon;
 
 /* Initiate map */
+
+// success callback for Google Maps API request
 function initMap() {
   'use strict';
   // constructor to create a new map
@@ -176,6 +178,11 @@ function initMap() {
     createMarker(name, location);
   };
   map.fitBounds(bounds);
+}
+
+// error callback for Google Maps API request
+function mapError() {
+  window.alert('Please make sure your API request is accurate.');
 }
 
 // create new marker on the given name and location
@@ -279,6 +286,11 @@ function populateInfowindow(marker, infoWindow) {
     });
   }
 }
+
+// global error handler
+window.onerror = function() {
+  window.alert('Error: Please check console for details.');
+};
 
 // activate knockout
 ko.applyBindings(new viewModel());
