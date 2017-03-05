@@ -17,9 +17,12 @@
     <h1>See Bars Around Bushwick</h1>
   </header>
   <nav id="drawer" class="nav">
+
     <div class="options-box" data-bind="with: displayLoc">
-      <input type="form" id="filter" data-bind="textInput: $root.searchValue"
-        placeholder="Search">
+      <form data-bind="submit: $root.searchValue">
+        <input type="form" id="filter" data-bind="textInput: $root.enteredValue" placeholder="Search">
+        <button type="submit">Submit</button>
+      </form>
       <ul id="locations-list" data-bind="foreach: $root.locationList, visible: $root.filteredArray.length === 0">
         <li id="location" data-bind="text: title, click: $root.setLoc"></li>
       </ul>

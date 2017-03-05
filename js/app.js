@@ -50,17 +50,18 @@ var viewModel = function() {
   // filter functionality
   this.enteredValue = ko.observable();
   this.searchValue = ko.pureComputed({
-    read: function() {
-      'use strict';
-      return this.enteredValue();
-    },
+    read: this.enteredValue,
     write: function(value) {
       'use strict';
-      this.enteredValue = value;
+      console.log(this.enteredValue());
+      if (this.enteredValue() !== undefined) {
+        value = this.enteredValue().toLowerCase();
+      };
       this.checkList = function(item) {
-        return item.title().toLowerCase() === value.toLowerCase();
+        return item.title().toLowerCase().includes(value);
       };
       this.filteredArray = this.locationList().filter(this.checkList);
+      console.log(this.filteredArray);
       self.refreshList(this.filteredArray);
     },
     owner: this
