@@ -53,6 +53,7 @@ var viewModel = function() {
 
   // filter functionality
   this.enteredValue = ko.observable();
+  this.errorValue = ko.observable();
   this.searchValue = ko.pureComputed({
     read: this.enteredValue,
     write: function(value) {
@@ -65,7 +66,12 @@ var viewModel = function() {
       if (this.enteredValue() !== undefined) {
         value = this.enteredValue().toLowerCase();
         this.filteredArray = this.locationList().filter(this.checkList);
-        self.refreshList(this.filteredArray);
+        console.log(this.filteredArray);
+        if (this.filteredArray.length === 0) {
+          self.errorValue('Location not listed.');
+        } else {
+         self.refreshList(this.filteredArray);
+        };
       };
     },
     owner: this

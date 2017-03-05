@@ -22,6 +22,7 @@
       <form data-bind="submit: $root.searchValue">
         <input type="form" id="filter" data-bind="textInput: $root.enteredValue" placeholder="Search">
         <button type="submit">Submit</button>
+        <p data-bind="visible: $root.errorValue, text: $root.errorValue"></p>
       </form>
       <ul id="locations-list" data-bind="foreach: $root.locationList, visible: $root.filteredArray.length === 0">
         <li id="location" data-bind="text: title, click: $root.setLoc"></li>
