@@ -17,7 +17,6 @@
     <h1>See Bars Around Bushwick</h1>
   </header>
   <nav id="drawer" class="nav">
-
     <div class="options-box" data-bind="with: displayLoc">
       <form data-bind="submit: $root.searchValue">
         <input type="form" id="filter" data-bind="textInput: $root.enteredValue" placeholder="Search">
@@ -30,20 +29,10 @@
       <ul id="filtered-list" data-bind="foreach: $root.filteredArray, visible: $root.filteredArray.length > 0">
         <li id="filtered-location" data-bind="text: title, click: $root.setLoc"></li>
       </ul>
-      <hr>
-      <div>
-        <h2 id="display-title" data-bind="text: title"></h2>
-        <div class="foursquare-container">
-          <h3 id="foursquare-header"></h3>
-          <div id="foursquare-data"></div>
-        </div>
-      </div>
     </div>
   </nav>
-  </div>
-
-    <div id="map"></div>
-  </div>
+  <div id="map"></div>
+</div>
 
 <script async defer src="http://maps.googleapis.com/maps/api/js?&key=AIzaSyCa4KpuiP-TagaPCyb40gaVNCZi2MMD3C0&libraries=places&callback=initMap"></script>
 <script src="bower_components/knockout/dist/knockout.js"></script>

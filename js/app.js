@@ -89,9 +89,12 @@ var viewModel = function() {
   });
 };
 
-
-/* FourSquare API */
+ /* FourSquare API */
+var tipCount,
+    checkinsCount,
+    usersCount;
 function loadFoursquare(locationName) {
+
   locationName = locationName.replace(' ', '%20');
 
   var foursquareUrl = 'https://api.foursquare.com/v2/venues/search' +
@@ -108,18 +111,19 @@ function loadFoursquare(locationName) {
       dataType: 'jsonp'
   }).done(function(result) {
       console.log(result.response.venues[0]);
+      tipCount = result.response.venues[0].stats.tipCount;
+      checkinsCount = result.response.venues[0].stats.checkinsCount;
+      usersCount = result.response.venues[0].stats.usersCount;
 
-      var tipCount = result.response.venues[0].stats.tipCount;
-      var checkinsCount = result.response.venues[0].stats.checkinsCount;
-      var usersCount = result.response.venues[0].stats.usersCount;
-
-      $('#foursquare-data').empty().append('Tip Count: ' + tipCount).append('<br>' +
-        'Checkins Count: ' + checkinsCount).append('<br>' +
-        'Users Count: ' + usersCount);
+      // largeInfoWindow.setContent('<br>Tip Count: ' + tipCount);
+      // $('#foursquare-data').empty().append('Tip Count: ' + tipCount).append('<br>' +
+      //   'Checkins Count: ' + checkinsCount).append('<br>' +
+      //   'Users Count: ' + usersCount);
   });
 
   return false;
 }
+
 
 /* Google Maps */
 
@@ -177,7 +181,6 @@ function createMarker(name, location) {
   // Create onclick event to open an infowindow for each marker
   marker.addListener('click', function() {
     'use strict';
-    document.getElementById('display-title').innerHTML = marker.title;
     queryLocation(marker.title, marker.position);
     loadFoursquare(marker.title);
   });
@@ -249,7 +252,8 @@ function populateInfowindow(marker, infoWindow) {
     infoWindow.setContent('<div><strong>' + marker.title + '</strong><br>'
                           + 'Rating: ' + marker.rating + '/5.0 <br>'
                           +  marker.address + '<br>'
-                          + markerHours + '</div>');
+                          + markerHours + '<br>'
+                          + 'Reviewer tip count: ' + tipCount+ '</div>');
     infoWindow.open(map, marker);
 
     // Make sure the marker property is cleared if the infowindow is closed
