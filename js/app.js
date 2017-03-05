@@ -60,13 +60,12 @@ var viewModel = function() {
       'use strict';
       console.log(this.enteredValue());
       this.checkList = function(item) {
-        return item.title().toLowerCase().includes(value);
+        return item.title().toLowerCase().replace("\'", "").includes(value);
       };
 
       if (this.enteredValue() !== undefined) {
-        value = this.enteredValue().toLowerCase();
+        value = this.enteredValue().toLowerCase().replace("\'", "");
         this.filteredArray = this.locationList().filter(this.checkList);
-        console.log(this.filteredArray);
         if (this.filteredArray.length === 0) {
           self.errorValue('Location not listed.');
         } else {
