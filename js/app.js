@@ -54,15 +54,15 @@ var viewModel = function() {
     write: function(value) {
       'use strict';
       console.log(this.enteredValue());
-      if (this.enteredValue() !== undefined) {
-        value = this.enteredValue().toLowerCase();
-      };
       this.checkList = function(item) {
         return item.title().toLowerCase().includes(value);
       };
-      this.filteredArray = this.locationList().filter(this.checkList);
-      console.log(this.filteredArray);
-      self.refreshList(this.filteredArray);
+
+      if (this.enteredValue() !== undefined) {
+        value = this.enteredValue().toLowerCase();
+        this.filteredArray = this.locationList().filter(this.checkList);
+        self.refreshList(this.filteredArray);
+      };
     },
     owner: this
   });
