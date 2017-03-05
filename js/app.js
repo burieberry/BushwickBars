@@ -243,6 +243,8 @@ function callback(results, status) {
         populateInfowindow(marker, largeInfoWindow);
       };
     });
+  } else {
+      window.alert('Request failed due to ' + status);
   };
 }
 
