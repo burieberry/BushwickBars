@@ -106,9 +106,9 @@ function loadFoursquare(locationName, marker) {
   }).done(function(result) {
     var venueID = result.response.venues[0].id;
     getFoursquarePhoto(venueID, marker);
-  }).fail(function(error) {
-    window.alert('Venue photo is currently unavailable.');
-    console.log('Cannot get venueID');
+  }).fail(function(e) {
+    console.log('Foursquare API error: Cannot get venueID.');
+    populateInfowindow(marker, largeInfoWindow, '');
   });
 }
 
@@ -145,9 +145,10 @@ function getFoursquarePhoto(venueID, marker) {
       //   // open infowindow
       //   largeInfoWindow.open(map, marker);
       // };
-  }).fail(function(error) {
-      window.alert('Cannot get venue photo.');
-      console.log('Cannot get photoURL');
+  }).fail(function(e) {
+      photoURL = '';
+      console.log('Foursquare API error: Cannot get photo URL.');
+      populateInfowindow(marker, largeInfoWindow, photoURL);
   });
 }
 
@@ -315,13 +316,15 @@ function populateInfowindow(marker, infoWindow, photoURL) {
     if (photoURL === '') {
       photo = '<em>Photo not available.</em>';
     } else {
-      photo = '<img src="' + photoURL + '">';
+      photo = '<img src="' + photoURL + '"><br>'
+                + '<small><em>Photo by Foursquare API.</em></small>';
     };
 
     infoWindow.setContent('<div><strong>' + marker.title + '</strong><br>'
                           + 'Rating: ' + marker.rating + '/5.0 <br>'
                           +  marker.address + '<br>'
                           + markerHours + '<br>'
+                          + '<small><em>Powered by Google Maps API.</em></small><br>'
                           + photo
                           + '</div>');
     infoWindow.open(map, marker);
