@@ -35,7 +35,7 @@ var ViewModel = function() {
   this.setLoc = function(loc) {
     'use strict';
     self.displayLoc(loc);
-    loadFoursquare(loc.title, loc.location);
+    // loadFoursquare(loc.title, loc.location);
     queryLocation(loc.title, loc.location);
   };
 
@@ -91,7 +91,7 @@ var ViewModel = function() {
   });
 };
 
-function loadFoursquare(locationName, locationPos) {
+function loadFoursquare(locationName, marker) {
   locationName = locationName.replace(' ', '%20');
 
   var foursquareUrl = 'https://api.foursquare.com/v2/venues/search' +
@@ -105,8 +105,8 @@ function loadFoursquare(locationName, locationPos) {
     dataType: 'jsonp'
   }).done(function(result) {
     var venueID = result.response.venues[0].id;
-    console.log(locationPos);
-    getFoursquarePhoto(venueID, locationPos);
+    console.log(marker);
+    getFoursquarePhoto(venueID, marker);
   }).fail(function(error) {
     window.alert('Venue photo is currently unavailable.');
     console.log('Cannot get venueID');
@@ -114,7 +114,8 @@ function loadFoursquare(locationName, locationPos) {
 }
 
 /* FourSquare API */
-function getFoursquarePhoto(venueID, locationPos) {
+function getFoursquarePhoto(venueID, marker) {
+  var photoURL;
   var foursquarePhotoUrl = 'https://api.foursquare.com/v2/venues/' + venueID
                     + '/photos?oauth_token=FRUVP33R43UFC1Q0TQACD5WBOIWSI5M42XSLOI00BZ55TEYF'
                     + '&v=20170305&limit=10&group=venue';
@@ -126,14 +127,20 @@ function getFoursquarePhoto(venueID, locationPos) {
       var prefix = result.response.photos.items[0].prefix;
       var suffix = result.response.photos.items[0].suffix;
       var size = 'height200'
-      var photoURL = prefix + size + suffix;
-      var content = largeInfoWindow.getContent();
-      if (content.includes(photoURL) === false) {
-        content += '<img src="' + photoURL + '">';
-        largeInfoWindow.setContent(content);
-        largeInfoWindow.setPosition(locationPos);
-        largeInfoWindow.open(map);
-      };
+      photoURL = prefix + size + suffix;
+
+      console.log(marker);
+
+      populateInfowindow(marker, largeInfoWindow, photoURL);
+
+      // get current content of infowindow and add photo if there's no photo
+      // var content = largeInfoWindow.getContent();
+      // if (content.includes(photoURL) === false) {
+      //   content += '<img src="' + photoURL + '">';
+      //   largeInfoWindow.setContent(content);
+      //   // open infowindow
+      //   largeInfoWindow.open(map, marker);
+      // };
   }).fail(function(error) {
       window.alert('Cannot get venue photo.');
       console.log('Cannot get photoURL');
@@ -198,6 +205,7 @@ function createMarker(name, location) {
     position: location,
     title: name,
     map: map,
+    photo: '',
     icon: defaultIcon
   });
 
@@ -210,7 +218,7 @@ function createMarker(name, location) {
   // Create onclick event to open an infowindow for each marker
   marker.addListener('click', function() {
     'use strict';
-    loadFoursquare(marker.title, marker.position);
+    // loadFoursquare(marker.title, marker);
     queryLocation(marker.title, marker.position);
   });
 
@@ -253,7 +261,8 @@ function callback(results, status) {
         marker.rating = results[0].rating;
         marker.address = results[0].vicinity;
         marker.hours = results[0].opening_hours.open_now;
-        populateInfowindow(marker, largeInfoWindow);
+        loadFoursquare(marker.title, marker);
+        // populateInfowindow(marker, largeInfoWindow, marker.photo);
       };
     });
   } else {
@@ -262,16 +271,29 @@ function callback(results, status) {
 }
 
 // populate infowindow
-function populateInfowindow(marker, infoWindow) {
+function populateInfowindow(marker, infoWindow, photoURL) {
   'use strict';
-  // Check to make sure the infowindow is not already opened on this marker
+
+  // check to make sure the infowindow is not already opened on this marker
   if (infoWindow.marker != marker) {
+
+    // clear the infowindow content
+    infoWindow.setContent('');
     infoWindow.marker = marker;
+
+    // Make sure the marker property is cleared if the infowindow is closed
+    infoWindow.addListener('closeclick', function() {
+      infoWindow.setMarker = null;
+    });
+
+    // set default icon to all markers
     for (var i = 0; i < markers.length; i++) {
       markers[i].setIcon(defaultIcon);
     }
+    // set highlighted icon to selected marker
     marker.setIcon(highlightedIcon);
 
+    // if marker has place open/close info, set the below
     var markerHours;
     if (marker.hours === true) {
       markerHours = '<em class="loc-open">Open Now!</em>';
@@ -279,17 +301,15 @@ function populateInfowindow(marker, infoWindow) {
       markerHours = '<em class="loc-closed">Closed now.</em>';
     };
 
+    console.log(marker);
+
     infoWindow.setContent('<div><strong>' + marker.title + '</strong><br>'
                           + 'Rating: ' + marker.rating + '/5.0 <br>'
                           +  marker.address + '<br>'
                           + markerHours + '<br>'
+                          + '<img src="' + photoURL + '">'
                           + '</div>');
-    // infoWindow.open(map, marker);
-
-    // Make sure the marker property is cleared if the infowindow is closed
-    infoWindow.addListener('closeclick', function() {
-      infoWindow.setMarker = null;
-    });
+    infoWindow.open(map, marker);
   }
 }
 
