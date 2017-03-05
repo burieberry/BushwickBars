@@ -105,7 +105,6 @@ function loadFoursquare(locationName, marker) {
     dataType: 'jsonp'
   }).done(function(result) {
     var venueID = result.response.venues[0].id;
-    console.log(marker);
     getFoursquarePhoto(venueID, marker);
   }).fail(function(error) {
     window.alert('Venue photo is currently unavailable.');
@@ -124,14 +123,18 @@ function getFoursquarePhoto(venueID, marker) {
       url: foursquarePhotoUrl,
       dataType: 'jsonp'
   }).done(function(result) {
-      var prefix = result.response.photos.items[0].prefix;
-      var suffix = result.response.photos.items[0].suffix;
-      var size = 'height200'
-      photoURL = prefix + size + suffix;
 
-      console.log(marker);
-
-      populateInfowindow(marker, largeInfoWindow, photoURL);
+      if (result.response.photos.items.length > 0) {
+        var prefix = result.response.photos.items[0].prefix;
+        var suffix = result.response.photos.items[0].suffix;
+        var size = 'height200'
+        photoURL = prefix + size + suffix;
+        populateInfowindow(marker, largeInfoWindow, photoURL);
+      } else {
+        window.alert('Venue photos not available.');
+        photoURL = '';
+        populateInfowindow(marker, largeInfoWindow, photoURL);
+      };
 
       // get current content of infowindow and add photo if there's no photo
       // var content = largeInfoWindow.getContent();
@@ -254,6 +257,7 @@ function queryLocation(locName, locLocation) {
 // return results of the location query with additional location details
 function callback(results, status) {
   'use strict';
+  var count = 0;
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     markers.forEach(function(marker) {
       // compare queried place title with current markers' titles
@@ -263,6 +267,11 @@ function callback(results, status) {
         marker.hours = results[0].opening_hours.open_now;
         loadFoursquare(marker.title, marker);
         // populateInfowindow(marker, largeInfoWindow, marker.photo);
+      } else {
+        count++;
+        if (count === markers.length) {
+          window.alert('Venue with that name cannot be found.');
+        };
       };
     });
   } else {
@@ -300,8 +309,6 @@ function populateInfowindow(marker, infoWindow, photoURL) {
     } else {
       markerHours = '<em class="loc-closed">Closed now.</em>';
     };
-
-    console.log(marker);
 
     infoWindow.setContent('<div><strong>' + marker.title + '</strong><br>'
                           + 'Rating: ' + marker.rating + '/5.0 <br>'
