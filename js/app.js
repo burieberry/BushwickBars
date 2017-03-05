@@ -131,7 +131,8 @@ function getFoursquarePhoto(venueID, marker) {
         photoURL = prefix + size + suffix;
         populateInfowindow(marker, largeInfoWindow, photoURL);
       } else {
-        window.alert('Venue photos not available.');
+        // if there are no photos available, pass empty string
+        // to display error message in populateInfoWindow
         photoURL = '';
         populateInfowindow(marker, largeInfoWindow, photoURL);
       };
@@ -310,11 +311,18 @@ function populateInfowindow(marker, infoWindow, photoURL) {
       markerHours = '<em class="loc-closed">Closed now.</em>';
     };
 
+    var photo;
+    if (photoURL === '') {
+      photo = '<em>Photo not available.</em>';
+    } else {
+      photo = '<img src="' + photoURL + '">';
+    };
+
     infoWindow.setContent('<div><strong>' + marker.title + '</strong><br>'
                           + 'Rating: ' + marker.rating + '/5.0 <br>'
                           +  marker.address + '<br>'
                           + markerHours + '<br>'
-                          + '<img src="' + photoURL + '">'
+                          + photo
                           + '</div>');
     infoWindow.open(map, marker);
   }
