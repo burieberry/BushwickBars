@@ -42,7 +42,11 @@ var viewModel = function() {
   // takes in an array, sets location to list item
   this.refreshList = function(list) {
     'use strict';
+    markers.forEach(function(marker) {
+        marker.setMap(null);
+      });
     list.forEach(function(listItem) {
+      createMarker(listItem.title(), listItem.location());
       self.setLoc(listItem);
     });
   };
