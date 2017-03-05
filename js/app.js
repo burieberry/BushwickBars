@@ -14,7 +14,7 @@ var Location = function(data) {
   this.location = data.position;
 };
 
-var viewModel = function() {
+var ViewModel = function() {
   'use strict';
   var self = this;
 
@@ -293,4 +293,4 @@ window.onerror = function() {
 };
 
 // activate knockout
-ko.applyBindings(new viewModel());
+ko.applyBindings(new ViewModel());
