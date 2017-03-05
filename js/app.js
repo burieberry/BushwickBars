@@ -35,8 +35,8 @@ var viewModel = function() {
   this.setLoc = function(loc) {
     'use strict';
     self.displayLoc(loc);
-    queryLocation(loc.title(), loc.location());
     loadFoursquare(loc.title());
+    queryLocation(loc.title(), loc.location());
   };
 
   // takes in an array, sets location to list item
@@ -89,39 +89,51 @@ var viewModel = function() {
   });
 };
 
- /* FourSquare API */
-var tipCount,
-    checkinsCount,
-    usersCount;
 function loadFoursquare(locationName) {
-
   locationName = locationName.replace(' ', '%20');
 
   var foursquareUrl = 'https://api.foursquare.com/v2/venues/search' +
-                      '?v=20170226&ll=40.703811%2C%20-73.918425';
-
-  foursquareUrl += '&query=' + locationName + '&intent=checkin' +
-                  '&client_id=YLKSNFKXRYIL5ONUCCESUFXSP51JPYSHGPQYHBKMCOKBEWUU' +
-                  '&client_secret=JWWDPQVJI1FROTNRS5J0RZHHDGSJF3ZYG14WBEHSQ5BAZQRD';
-
-  $('#foursquare-header').empty().append('Foursquare Stats:');
+    '?v=20170226&ll=40.703811%2C%20-73.918425' +
+    '&query=' + locationName + '&intent=checkin' +
+    '&client_id=YLKSNFKXRYIL5ONUCCESUFXSP51JPYSHGPQYHBKMCOKBEWUU' +
+    '&client_secret=JWWDPQVJI1FROTNRS5J0RZHHDGSJF3ZYG14WBEHSQ5BAZQRD';
 
   $.ajax({
-      url: foursquareUrl,
+    url: foursquareUrl,
+    dataType: 'jsonp'
+  }).done(function(result) {
+    console.log(result.response.venues[0].location);
+    var venueID = result.response.venues[0].id;
+    getFoursquarePhoto(venueID);
+
+  }).fail(function(error) {
+    console.log('Cannot get venueID');
+  });
+}
+
+/* FourSquare API */
+function getFoursquarePhoto(venueID) {
+  var foursquarePhotoUrl = 'https://api.foursquare.com/v2/venues/' + venueID
+                    + '/photos?oauth_token=FRUVP33R43UFC1Q0TQACD5WBOIWSI5M42XSLOI00BZ55TEYF'
+                    + '&v=20170305&limit=10&group=venue';
+
+  $.ajax({
+      url: foursquarePhotoUrl,
       dataType: 'jsonp'
   }).done(function(result) {
-      console.log(result.response.venues[0]);
-      tipCount = result.response.venues[0].stats.tipCount;
-      checkinsCount = result.response.venues[0].stats.checkinsCount;
-      usersCount = result.response.venues[0].stats.usersCount;
-
-      // largeInfoWindow.setContent('<br>Tip Count: ' + tipCount);
-      // $('#foursquare-data').empty().append('Tip Count: ' + tipCount).append('<br>' +
-      //   'Checkins Count: ' + checkinsCount).append('<br>' +
-      //   'Users Count: ' + usersCount);
+      var prefix = result.response.photos.items[0].prefix;
+      var suffix = result.response.photos.items[0].suffix;
+      var size = 'height200'
+      var photoURL = prefix + size + suffix;
+      var content = largeInfoWindow.getContent();
+      if (content.includes(photoURL) === false) {
+        content += '<img src="' + photoURL + '">';
+        largeInfoWindow.setContent(content);
+        largeInfoWindow.open(map);
+      };
+  }).fail(function(error) {
+      console.log('Cannot get photoURL');
   });
-
-  return false;
 }
 
 
@@ -132,7 +144,8 @@ var markers = []; // initialize global locations empty array
 var position,
     title,
     service,
-    largeInfoWindow;
+    largeInfoWindow,
+    picInfoWindow;
 var defaultIcon,
     highlightedIcon;
 
@@ -181,8 +194,8 @@ function createMarker(name, location) {
   // Create onclick event to open an infowindow for each marker
   marker.addListener('click', function() {
     'use strict';
-    queryLocation(marker.title, marker.position);
     loadFoursquare(marker.title);
+    queryLocation(marker.title, marker.position);
   });
 
   return marker;
@@ -221,7 +234,6 @@ function callback(results, status) {
     markers.forEach(function(marker) {
       // compare queried place title with current markers' titles
       if (results[0].name === marker.title) {
-        // marker.placeID = results[0].place_id;
         marker.rating = results[0].rating;
         marker.address = results[0].vicinity;
         marker.hours = results[0].opening_hours.open_now;
@@ -231,7 +243,7 @@ function callback(results, status) {
   };
 }
 
-// populate infowindow when a marker is clicked
+// populate infowindow
 function populateInfowindow(marker, infoWindow) {
   'use strict';
   // Check to make sure the infowindow is not already opened on this marker
@@ -253,7 +265,7 @@ function populateInfowindow(marker, infoWindow) {
                           + 'Rating: ' + marker.rating + '/5.0 <br>'
                           +  marker.address + '<br>'
                           + markerHours + '<br>'
-                          + 'Reviewer tip count: ' + tipCount+ '</div>');
+                          + '</div>');
     infoWindow.open(map, marker);
 
     // Make sure the marker property is cleared if the infowindow is closed

@@ -8,8 +8,8 @@ This app uses Knockout JS for its MVVM pattern.
 
 1- Open `index.html`
 2- View map.
-3- Click on a marker to see the information window and Foursquare stats.
-4- Use the search bar or click on a list item to see the information window and Foursquare stats.
+3- Click on a marker to see the information window.
+4- Use the search bar or click on a list item to see the information window.
 
 **On Mobile:**
 - Use the hamburger icon to view and filter the list of locations.
