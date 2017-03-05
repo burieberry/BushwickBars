@@ -35,19 +35,20 @@ var viewModel = function() {
   this.setLoc = function(loc) {
     'use strict';
     self.displayLoc(loc);
-    loadFoursquare(loc.title());
+    loadFoursquare(loc.title(), loc.location());
     queryLocation(loc.title(), loc.location());
   };
 
   // takes in an array, sets location to list item
   this.refreshList = function(list) {
     'use strict';
+    largeInfoWindow.close();
     markers.forEach(function(marker) {
         marker.setMap(null);
-      });
+    });
     list.forEach(function(listItem) {
       createMarker(listItem.title(), listItem.location());
-      self.setLoc(listItem);
+      self.displayLoc(listItem);
     });
   };
 
@@ -89,7 +90,7 @@ var viewModel = function() {
   });
 };
 
-function loadFoursquare(locationName) {
+function loadFoursquare(locationName, locationPos) {
   locationName = locationName.replace(' ', '%20');
 
   var foursquareUrl = 'https://api.foursquare.com/v2/venues/search' +
@@ -102,17 +103,17 @@ function loadFoursquare(locationName) {
     url: foursquareUrl,
     dataType: 'jsonp'
   }).done(function(result) {
-    console.log(result.response.venues[0].location);
     var venueID = result.response.venues[0].id;
-    getFoursquarePhoto(venueID);
-
+    console.log(locationPos);
+    getFoursquarePhoto(venueID, locationPos);
   }).fail(function(error) {
+    window.alert('Venue photo is currently unavailable.');
     console.log('Cannot get venueID');
   });
 }
 
 /* FourSquare API */
-function getFoursquarePhoto(venueID) {
+function getFoursquarePhoto(venueID, locationPos) {
   var foursquarePhotoUrl = 'https://api.foursquare.com/v2/venues/' + venueID
                     + '/photos?oauth_token=FRUVP33R43UFC1Q0TQACD5WBOIWSI5M42XSLOI00BZ55TEYF'
                     + '&v=20170305&limit=10&group=venue';
@@ -129,9 +130,11 @@ function getFoursquarePhoto(venueID) {
       if (content.includes(photoURL) === false) {
         content += '<img src="' + photoURL + '">';
         largeInfoWindow.setContent(content);
+        largeInfoWindow.setPosition(locationPos);
         largeInfoWindow.open(map);
       };
   }).fail(function(error) {
+      window.alert('Cannot get venue photo.');
       console.log('Cannot get photoURL');
   });
 }
@@ -144,8 +147,7 @@ var markers = []; // initialize global locations empty array
 var position,
     title,
     service,
-    largeInfoWindow,
-    picInfoWindow;
+    largeInfoWindow;
 var defaultIcon,
     highlightedIcon;
 
@@ -162,6 +164,7 @@ function initMap() {
 
   var bounds = new google.maps.LatLngBounds();
   largeInfoWindow = new google.maps.InfoWindow();
+  largeInfoWindow.setContent('');
   highlightedIcon = makeMarkerIcon('42adf4');
 
   // use the locations array to call for marker creation and set bounds
@@ -194,7 +197,7 @@ function createMarker(name, location) {
   // Create onclick event to open an infowindow for each marker
   marker.addListener('click', function() {
     'use strict';
-    loadFoursquare(marker.title);
+    loadFoursquare(marker.title, marker.position);
     queryLocation(marker.title, marker.position);
   });
 
@@ -266,7 +269,7 @@ function populateInfowindow(marker, infoWindow) {
                           +  marker.address + '<br>'
                           + markerHours + '<br>'
                           + '</div>');
-    infoWindow.open(map, marker);
+    // infoWindow.open(map, marker);
 
     // Make sure the marker property is cleared if the infowindow is closed
     infoWindow.addListener('closeclick', function() {
