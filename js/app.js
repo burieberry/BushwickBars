@@ -69,6 +69,7 @@ var ViewModel = function() {
         this.filteredArray = this.locationList().filter(this.checkList);
         if (this.filteredArray.length === 0) {
           self.errorValue('Location not listed.');
+          // TODO: when reset, don't show this message
         } else {
          self.refreshList(this.filteredArray);
         };
