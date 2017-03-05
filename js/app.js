@@ -179,6 +179,11 @@ function initMap() {
     createMarker(name, location);
   };
   map.fitBounds(bounds);
+
+  // fit bounds when window is resized
+  google.maps.event.addDomListener(window, 'resize', function() {
+    map.fitBounds(bounds); // `bounds` is a `LatLngBounds` object
+  });
 }
 
 // error callback for Google Maps API request
