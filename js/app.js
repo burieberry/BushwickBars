@@ -128,6 +128,7 @@ function loadFoursquare(locationName, marker) {
     // fallback if venue is not on Foursquare
     if (result.response.venues.length > 0) {
       var venueID = result.response.venues[0].id;
+      // call getFoursquarePhoto to get photo
       getFoursquarePhoto(venueID, marker);
     } else {
       populateInfowindow(marker, largeInfoWindow, '');
@@ -149,7 +150,6 @@ function getFoursquarePhoto(venueID, marker) {
       url: foursquarePhotoUrl,
       dataType: 'jsonp'
   }).done(function(result) {
-
       if (result.response.photos.items.length > 0) {
         var prefix = result.response.photos.items[0].prefix;
         var suffix = result.response.photos.items[0].suffix;
@@ -162,15 +162,6 @@ function getFoursquarePhoto(venueID, marker) {
         photoURL = '';
         populateInfowindow(marker, largeInfoWindow, photoURL);
       };
-
-      // get current content of infowindow and add photo if there's no photo
-      // var content = largeInfoWindow.getContent();
-      // if (content.includes(photoURL) === false) {
-      //   content += '<img src="' + photoURL + '">';
-      //   largeInfoWindow.setContent(content);
-      //   // open infowindow
-      //   largeInfoWindow.open(map, marker);
-      // };
   }).fail(function(e) {
       photoURL = '';
       console.log('Foursquare API error: Cannot get photo URL.');
