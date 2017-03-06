@@ -153,7 +153,7 @@ function getFoursquarePhoto(venueID, marker) {
       if (result.response.photos.items.length > 0) {
         var prefix = result.response.photos.items[0].prefix;
         var suffix = result.response.photos.items[0].suffix;
-        var size = 'height200'
+        var size = 'height150'
         photoURL = prefix + size + suffix;
         populateInfowindow(marker, largeInfoWindow, photoURL);
       } else {

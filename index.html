@@ -18,7 +18,7 @@
   </header>
   <nav id="drawer" class="nav">
     <div class="options-box" data-bind="with: displayLoc">
-      <form data-bind="submit: $root.searchValue">
+      <form id="search-bar" data-bind="submit: $root.searchValue">
         <input type="form" id="filter" data-bind="textInput: $root.enteredValue" placeholder="Search">
         <button type="submit">Submit</button>
         <p data-bind="visible: $root.errorValue, text: $root.errorValue"></p>

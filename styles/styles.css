@@ -11,13 +11,16 @@ header, nav, div {
 }
 
 .header {
-    display: block;
-    position: fixed;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #999;
+    border-bottom: 0;
+    border-radius: 3px;
     width: 340px;
     height: 50px;
     padding: 1em;
     z-index: 2;
-  }
+}
 
 .hamburger-icon {
   display: none;
@@ -77,6 +80,7 @@ h1 {
   text-align: left;
   width: 340px;
   z-index: 1;
+  overflow-y: scroll;
 }
 
 .loc-open {
@@ -146,16 +150,6 @@ h1 {
     transition: transform 0.3s ease;
   }
 
-  h2 {
-    font-size: 20px;
-    margin: 0;
-  }
-
-  h3 {
-    font-size: 16px;
-    margin: 0;
-  }
-
   #filter {
     border: 1px solid #E0E0E0;
   }
@@ -163,16 +157,5 @@ h1 {
   #map {
     padding-top: 50px;
     left: 0;
-  }
-}
-
-@media screen and (max-width: 414px) {
-  .nav {
-    max-height: 500px;
-  }
-
-  .options-box {
-    max-height: 500px;
-    overflow-y: scroll;
   }
 }
