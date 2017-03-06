@@ -5,7 +5,23 @@ var locations = [
   {title: 'Sally Roots', position: {lat: 40.702754, lng: -73.916373}},
   {title: 'The Rookery Bar', position: {lat: 40.707404, lng: -73.922462}},
   {title: 'Boobie Trap', position: {lat: 40.70015, lng: -73.91604}},
-  {title: 'Bootleg Bar', position: {lat: 40.698762, lng: -73.917186}}
+  {title: 'Bootleg Bar', position: {lat: 40.698762, lng: -73.917186}},
+  {title: 'The Bodega', position: {lat: 40.707408, lng: -73.92179}},
+  {title: 'Lot 45', position: {lat: 40.707149, lng: -73.922475}},
+  {title: 'The Keep', position: {lat: 40.708278, lng: -73.919621}},
+  {title: 'The Three Diamond Door', position: {lat: 40.703515, lng: -73.926153}},
+  {title: 'Birdy\'s', position: {lat: 40.697557, lng: -73.931502}},
+  {title: 'Happyfun Hideaway', position: {lat: 40.697556, lng: -73.931654}},
+  {title: 'Talon', position: {lat: 40.701115, lng: -73.914339}},
+  {title: 'Dromedary Urban Tiki Bar', position: {lat: 40.699617, lng: -73.915813}},
+  {title: 'Left Hand Path', position: {lat: 40.705176, lng: -73.920148}},
+  {title: 'The Johnson\'s', position: {lat: 40.705867, lng: -73.923855}},
+  {title: 'Gotham City Lounge', position: {lat: 40.69809, lng: -73.92661}},
+  {title: 'Bossa Nova Civic Club', position: {lat: 40.697974, lng: -73.927965}},
+  {title: 'The Sampler Bushwick', position: {lat: 40.705545, lng: -73.922317}},
+  {title: 'Yours Sincerely', position: {lat: 40.702864, lng: -73.92915}},
+  {title: 'Jupiter Disco', position: {lat: 40.70813, lng: -73.923523}},
+  {title: 'The Cobra Club', position: {lat: 40.706685, lng: -73.923494}}
 ];
 
 var Location = function(data) {
@@ -104,8 +120,13 @@ function loadFoursquare(locationName, marker) {
     url: foursquareUrl,
     dataType: 'jsonp'
   }).done(function(result) {
-    var venueID = result.response.venues[0].id;
-    getFoursquarePhoto(venueID, marker);
+    // fallback if venue is not on Foursquare
+    if (result.response.venues.length > 0) {
+      var venueID = result.response.venues[0].id;
+      getFoursquarePhoto(venueID, marker);
+    } else {
+      populateInfowindow(marker, largeInfoWindow, '');
+    }
   }).fail(function(e) {
     console.log('Foursquare API error: Cannot get venueID.');
     populateInfowindow(marker, largeInfoWindow, '');
@@ -324,7 +345,7 @@ function populateInfowindow(marker, infoWindow, photoURL) {
                           + 'Rating: ' + marker.rating + '/5.0 <br>'
                           +  marker.address + '<br>'
                           + markerHours + '<br>'
-                          + photo
+                          + photo + '<br>'
                           + '<small><em>Map powered by Google Maps API.</em></small>'
                           + '</div>');
     infoWindow.open(map, marker);
