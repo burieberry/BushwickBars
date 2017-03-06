@@ -285,9 +285,16 @@ function callback(results, status) {
     markers.forEach(function(marker) {
       // compare queried place title with current markers' titles
       if (results[0].name === marker.title) {
-        marker.rating = results[0].rating;
-        marker.address = results[0].vicinity;
-        marker.hours = results[0].opening_hours.open_now;
+        results[0].rating ? marker.rating = results[0].rating
+              : marker.rating = 'N/A';
+
+        results[0].vicinity ? marker.address = results[0].vicinity
+                : marker.address = 'Address not available.';
+
+        console.log(results[0].opening_hours);
+        results[0].opening_hours !== undefined
+                ? marker.hours = results[0].opening_hours.open_now
+                : marker.hours = '';
         loadFoursquare(marker.title, marker);
         // populateInfowindow(marker, largeInfoWindow, marker.photo);
       } else {
