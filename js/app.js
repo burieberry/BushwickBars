@@ -65,11 +65,16 @@ var ViewModel = function() {
     'use strict';
     largeInfoWindow.close();
     markers.forEach(function(marker) {
-        marker.setMap(null);
-    });
-    list.forEach(function(listItem) {
-      createMarker(listItem.title, listItem.location);
-      self.displayLoc(listItem);
+      // hide all markers
+      marker.setVisible(false);
+      list.forEach(function (item) {
+        // if there's a match, display marker
+        if (item.title === marker.title) {
+          marker.setVisible(true);
+          // display item on the locations list sidebar
+          self.displayLoc(item);
+        };
+      });
     });
   };
 
