@@ -21,7 +21,12 @@ var locations = [
   {title: 'The Sampler Bushwick', position: {lat: 40.705545, lng: -73.922317}},
   {title: 'Yours Sincerely', position: {lat: 40.702864, lng: -73.92915}},
   {title: 'Jupiter Disco', position: {lat: 40.70813, lng: -73.923523}},
-  {title: 'The Cobra Club', position: {lat: 40.706685, lng: -73.923494}}
+  {title: 'The Cobra Club', position: {lat: 40.706685, lng: -73.923494}},
+  {title: 'Pine Box Rock Shop', position: {lat: 40.705274, lng: -73.932676}},
+  {title: 'The Shipwreck Lounge', position: {lat: 40.706085, lng: -73.923531}},
+  {title: 'Alphaville', position: {lat: 40.700546, lng: -73.925798}},
+  {title: 'Starr Bar', position: {lat: 40.704985, lng: -73.922905}},
+  {title: 'Punch Bowl Social', position: {lat: 40.704887, lng: -73.923669}}
 ];
 
 var Location = function(data) {
