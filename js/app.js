@@ -356,7 +356,7 @@ function populateInfowindow(marker, infoWindow, photoURL) {
 
     var photo;
     if (photoURL === '') {
-      photo = '<em>Photo not available.</em>';
+      photo = 'Photo not available.<br>';
     } else {
       photo = '<img src="' + photoURL + '"><br>'
                 + '<small><em>Photo by Foursquare API.</em></small> ';
