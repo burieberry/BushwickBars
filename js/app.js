@@ -336,9 +336,18 @@ function populateInfowindow(marker, infoWindow, photoURL) {
     var markerHours;
     if (marker.hours === true) {
       markerHours = '<em class="loc-open">Open Now!</em>';
+    } else if (marker.hours === '') {
+      markerHours = 'Hours not available.';
     } else {
       markerHours = '<em class="loc-closed">Closed now.</em>';
     };
+
+    var rating;
+    if (marker.rating === 'N/A') {
+      rating = 'Rating not available.';
+    } else {
+      rating = 'Rating: ' + marker.rating + '/5.0';
+    }
 
     var photo;
     if (photoURL === '') {
@@ -349,10 +358,10 @@ function populateInfowindow(marker, infoWindow, photoURL) {
     };
 
     infoWindow.setContent('<div><strong>' + marker.title + '</strong><br>'
-                          + 'Rating: ' + marker.rating + '/5.0 <br>'
-                          +  marker.address + '<br>'
+                          + rating + '<br>'
+                          + marker.address + '<br>'
                           + markerHours + '<br>'
-                          + photo + '<br>'
+                          + photo
                           + '<small><em>Map powered by Google Maps API.</em></small>'
                           + '</div>');
     infoWindow.open(map, marker);
