@@ -292,7 +292,6 @@ function callback(results, status) {
         results[0].vicinity ? marker.address = results[0].vicinity
                 : marker.address = 'Address not available.';
 
-        console.log(results[0].opening_hours);
         results[0].opening_hours !== undefined
                 ? marker.hours = results[0].opening_hours.open_now
                 : marker.hours = '';
