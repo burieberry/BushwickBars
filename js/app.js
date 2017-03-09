@@ -85,7 +85,7 @@ var ViewModel = function() {
     read: this.enteredValue,
     write: function(value) {
       'use strict';
-      console.log(this.enteredValue());
+      value = this.enteredValue();
       this.checkList = function(item) {
         return item.title.toLowerCase().replace("\'", "").includes(value);
       };
@@ -95,9 +95,9 @@ var ViewModel = function() {
         this.filteredArray = this.locationList().filter(this.checkList);
         if (this.filteredArray.length === 0) {
           self.errorValue('Location not listed.');
-          // TODO: when reset, don't show this message
         } else {
-         self.refreshList(this.filteredArray);
+          self.errorValue('');
+          self.refreshList(this.filteredArray);
         };
       };
     },
