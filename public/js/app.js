@@ -362,9 +362,5 @@ window.onerror = function(err) {
   window.alert(err);
 };
 
-$(document).ready(function() {
-  initMap();
-});
-
 // activate knockout
 ko.applyBindings(new ViewModel());

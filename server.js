@@ -23,7 +23,7 @@ catch (ex) {
 }
 
 app.use((req, res, next) => {
-  res.locals.GOOGLE_API_KEY = config.GOOGLE_MAPS_API;
+  res.locals.GOOGLE_MAPS_API = config.GOOGLE_MAPS_API;
   res.locals.OAUTH_TOKEN = config.OAUTH_TOKEN;
   res.locals.CLIENT_ID = config.CLIENT_ID;
   res.locals.CLIENT_SECRET = config.CLIENT_SECRET;
