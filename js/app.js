@@ -1,3 +1,5 @@
+'use strict';
+
 // Locations array for bars around Bushwick, Brooklyn
 var locations = [
   {title: 'Heavy Woods', position: {lat: 40.705606, lng: -73.921648}},
@@ -30,13 +32,11 @@ var locations = [
 ];
 
 var Location = function(data) {
-  'use strict';
   this.title = data.title;
   this.location = data.position;
 };
 
 var ViewModel = function() {
-  'use strict';
   var self = this;
 
   // initial location array
@@ -54,7 +54,7 @@ var ViewModel = function() {
 
   // set clicked location as display location
   this.setLoc = function(loc) {
-    'use strict';
+
     self.displayLoc(loc);
     // loadFoursquare(loc.title, loc.location);
     queryLocation(loc.title, loc.location);
@@ -62,7 +62,7 @@ var ViewModel = function() {
 
   // takes in an array, sets location to list item
   this.refreshList = function(list) {
-    'use strict';
+
     largeInfoWindow.close();
     markers.forEach(function(marker) {
       // hide all markers
@@ -84,7 +84,7 @@ var ViewModel = function() {
   this.searchValue = ko.pureComputed({
     read: this.enteredValue,
     write: function(value) {
-      'use strict';
+
       value = this.enteredValue();
       this.checkList = function(item) {
         return item.title.toLowerCase().replace("\'", "").includes(value);
@@ -109,7 +109,7 @@ var ViewModel = function() {
   this.slide = ko.pureComputed({
     read: this.menu,
     write: function() {
-      'use strict';
+
       var drawer = document.getElementById('drawer');
       drawer.classList.toggle('open');
     },
@@ -123,8 +123,8 @@ function loadFoursquare(locationName, marker) {
   var foursquareUrl = 'https://api.foursquare.com/v2/venues/search' +
     '?v=20170226&ll=40.703811%2C%20-73.918425' +
     '&query=' + locationName + '&intent=checkin' +
-    '&client_id=YLKSNFKXRYIL5ONUCCESUFXSP51JPYSHGPQYHBKMCOKBEWUU' +
-    '&client_secret=JWWDPQVJI1FROTNRS5J0RZHHDGSJF3ZYG14WBEHSQ5BAZQRD';
+    '&client_id=' + config.clientId +
+    '&client_secret=' + config.clientSecret;
 
   $.ajax({
     url: foursquareUrl,
@@ -148,7 +148,7 @@ function loadFoursquare(locationName, marker) {
 function getFoursquarePhoto(venueID, marker) {
   var photoURL;
   var foursquarePhotoUrl = 'https://api.foursquare.com/v2/venues/' + venueID
-                    + '/photos?oauth_token=FRUVP33R43UFC1Q0TQACD5WBOIWSI5M42XSLOI00BZ55TEYF'
+                    + '/photos?oauth_token=' + config.oAuthToken +
                     + '&v=20170305&limit=10&group=venue';
 
   $.ajax({
@@ -190,7 +190,6 @@ var defaultIcon,
 
 // success callback for Google Maps API request
 function initMap() {
-  'use strict';
   // constructor to create a new map
   map = new google.maps.Map(document.getElementById('map'), {
     // center is Bushwick, Brooklyn, Dekalb L station
@@ -227,7 +226,6 @@ function mapError() {
 
 // create new marker on the given name and location
 function createMarker(name, location) {
-  'use strict';
   var marker = new google.maps.Marker({
     position: location,
     title: name,
@@ -244,7 +242,7 @@ function createMarker(name, location) {
 
   // Create onclick event to open an infowindow for each marker
   marker.addListener('click', function() {
-    'use strict';
+
     // loadFoursquare(marker.title, marker);
     queryLocation(marker.title, marker.position);
   });
@@ -254,7 +252,6 @@ function createMarker(name, location) {
 
 // create new icon for the marker with given color
 function makeMarkerIcon(markerColor) {
-  'use strict';
   var markerImage = new google.maps.MarkerImage(
     'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
     '|40|_|%E2%80%A2',
@@ -267,7 +264,6 @@ function makeMarkerIcon(markerColor) {
 
 // use Places Library to find location
 function queryLocation(locName, locLocation) {
-  'use strict';
   var request = {
     name: locName,
     location: locLocation,
@@ -280,7 +276,6 @@ function queryLocation(locName, locLocation) {
 
 // return results of the location query with additional location details
 function callback(results, status) {
-  'use strict';
   var count = 0;
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     markers.forEach(function(marker) {
@@ -311,8 +306,6 @@ function callback(results, status) {
 
 // populate infowindow
 function populateInfowindow(marker, infoWindow, photoURL) {
-  'use strict';
-
   // check to make sure the infowindow is not already opened on this marker
   if (infoWindow.marker != marker) {
 
