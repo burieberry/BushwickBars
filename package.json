@@ -1,0 +1,28 @@
+{
+  "name": "neighborhood-map",
+  "version": "1.0.0",
+  "description": "This app utilizes Google Maps API and Foursquare API to display Bushwick bars on the map and gives more information about the selected bar in the information window and on the siderail.",
+  "main": "config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/burieberry/neighborhood-map-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/burieberry/neighborhood-map-project/issues"
+  },
+  "homepage": "https://github.com/burieberry/neighborhood-map-project#readme",
+  "dependencies": {
+    "express": "^4.15.4",
+    "jquery": "^3.2.1",
+    "knockout": "^3.4.2",
+    "nunjucks": "^3.0.1",
+    "path": "^0.12.7"
+  }
+}

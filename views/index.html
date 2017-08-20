@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Bushwick Bars</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/stylesheets/styles.css">
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <a id="menu" class="hamburger-icon" data-bind="click: slide">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"/>
+          </svg>
+        </a>
+        <h1>Bushwick Bars</h1>
+      </header>
+      <nav id="drawer" class="nav">
+        <div class="options-box" data-bind="with: displayLoc">
+          <form id="search-bar" data-bind="submit: $root.searchValue">
+            <input type="form" id="filter" data-bind="textInput: $root.enteredValue" placeholder="Search">
+            <button type="submit">Submit</button>
+            <p data-bind="visible: $root.errorValue, text: $root.errorValue"></p>
+          </form>
+          <ul id="locations-list" data-bind="foreach: $root.locationList, visible: $root.filteredArray.length === 0">
+            <li id="location" data-bind="text: title, click: $root.setLoc"></li>
+          </ul>
+          <ul id="filtered-list" data-bind="foreach: $root.filteredArray, visible: $root.filteredArray.length > 0">
+            <li id="filtered-location" data-bind="text: title, click: $root.setLoc"></li>
+          </ul>
+        </div>
+      </nav>
+      <main id="map"></main>
+    </div>
+
+    <script src="../knockout/build/output/knockout-latest.js"></script>
+    <script src="../jquery/dist/jquery.min.js"></script>
+    <script src="../js/app.js"></script>
+    <script async defer onerror="mapError()" src="http://maps.googleapis.com/maps/api/js?&key={{ GOOGLE_MAPS_API }}&libraries=places&callback=initMap"></script>
+  </body>
+</html>
