@@ -19,14 +19,12 @@ try {
   config = require('./config.json');
 }
 catch (ex) {
-
+  console.log(ex);
 }
 
 app.use((req, res, next) => {
   res.locals.GOOGLE_MAPS_API = config.GOOGLE_MAPS_API;
   res.locals.OAUTH_TOKEN = config.OAUTH_TOKEN;
-  res.locals.CLIENT_ID = config.CLIENT_ID;
-  res.locals.CLIENT_SECRET = config.CLIENT_SECRET;
   next();
 });
 

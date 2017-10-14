@@ -8,8 +8,6 @@ var locations = [
   {title: 'The Rookery Bar', position: {lat: 40.707404, lng: -73.922462}},
   {title: 'Boobie Trap', position: {lat: 40.70015, lng: -73.91604}},
   {title: 'Bootleg Bar', position: {lat: 40.698762, lng: -73.917186}},
-  // {title: 'The Bodega', position: {lat: 40.707408, lng: -73.92179}},
-  // {title: 'Lot 45', position: {lat: 40.707149, lng: -73.922475}},
   {title: 'The Keep', position: {lat: 40.708278, lng: -73.919621}},
   {title: 'The Three Diamond Door', position: {lat: 40.703515, lng: -73.926153}},
   {title: 'Birdy\'s', position: {lat: 40.697557, lng: -73.931502}},
@@ -25,7 +23,6 @@ var locations = [
   {title: 'Jupiter Disco', position: {lat: 40.70813, lng: -73.923523}},
   {title: 'The Cobra Club', position: {lat: 40.706685, lng: -73.923494}},
   {title: 'Pine Box Rock Shop', position: {lat: 40.705274, lng: -73.932676}},
-  // {title: 'The Shipwreck Lounge', position: {lat: 40.706085, lng: -73.923531}},
   {title: 'Alphaville', position: {lat: 40.700546, lng: -73.925798}},
   {title: 'Starr Bar', position: {lat: 40.704985, lng: -73.922905}},
   {title: 'Punch Bowl Social', position: {lat: 40.704887, lng: -73.923669}}
@@ -115,21 +112,14 @@ var ViewModel = function() {
 
 function loadFoursquare(locationName, marker) {
   locationName = locationName.replace(' ', '%20');
-
-  var foursquareUrl = 'https://api.foursquare.com/v2/venues/search' +
-    '?v=20170226&ll=40.703811%2C%20-73.918425' +
-    '&query=' + locationName + '&intent=checkin' +
-    '&client_id=YLKSNFKXRYIL5ONUCCESUFXSP51JPYSHGPQYHBKMCOKBEWUU' +
-    '&client_secret=JWWDPQVJI1FROTNRS5J0RZHHDGSJF3ZYG14WBEHSQ5BAZQRD';
+  var foursquareUrl = 'https://api.foursquare.com/v2/venues/search?oauth_token=FRUVP33R43UFC1Q0TQACD5WBOIWSI5M42XSLOI00BZ55TEYF&v=20171013&intent=checkin&ll=40.703811%2C%20-73.918425&query=' + locationName;
 
   $.ajax({
     url: foursquareUrl,
     dataType: 'jsonp'
   }).done(function(result) {
-    // fallback if venue is not on Foursquare
-    if (result.response.venues.length > 0) {
+    if (result.response.venues) {
       var venueID = result.response.venues[0].id;
-      // call getFoursquarePhoto to get photo
       getFoursquarePhoto(venueID, marker);
     } else {
       populateInfowindow(marker, largeInfoWindow, '');
@@ -143,30 +133,25 @@ function loadFoursquare(locationName, marker) {
 /* FourSquare API */
 function getFoursquarePhoto(venueID, marker) {
   var photoURL;
-  var foursquarePhotoUrl = 'https://api.foursquare.com/v2/venues/' + venueID
-                    + '/photos?oauth_token=FRUVP33R43UFC1Q0TQACD5WBOIWSI5M42XSLOI00BZ55TEYF'
-                    + '&v=20170305&limit=10&group=venue';
+  var foursquarePhotoUrl = 'https://api.foursquare.com/v2/venues/' + venueID + '/photos?oauth_token=FRUVP33R43UFC1Q0TQACD5WBOIWSI5M42XSLOI00BZ55TEYF&v=20171013&group=venue&limit=5';
 
   $.ajax({
       url: foursquarePhotoUrl,
       dataType: 'jsonp'
   }).done(function(result) {
-      if (result.response.photos.items.length > 0) {
+      if (result.response.photos) {
         var prefix = result.response.photos.items[0].prefix;
         var suffix = result.response.photos.items[0].suffix;
         var size = 'height150'
         photoURL = prefix + size + suffix;
         populateInfowindow(marker, largeInfoWindow, photoURL);
-      } else {
-        // if there are no photos available, pass empty string
-        // to display error message in populateInfoWindow
-        photoURL = '';
-        populateInfowindow(marker, largeInfoWindow, photoURL);
-      };
+      }
+      else {
+        populateInfowindow(marker, largeInfoWindow);
+      }
   }).fail(function(e) {
-      photoURL = '';
       console.log('Foursquare API error: Cannot get photo URL.');
-      populateInfowindow(marker, largeInfoWindow, photoURL);
+      populateInfowindow(marker, largeInfoWindow);
   });
 }
 
@@ -188,7 +173,7 @@ var defaultIcon,
 function initMap() {
   // constructor to create a new map
   map = new google.maps.Map(document.getElementById('map'), {
-    // center is Bushwick, Brooklyn, Dekalb L station
+    // center is Bushwick, Brooklyn
     center: { lat: 40.703811, lng: -73.918425 },
     zoom: 15,
     mapTypeControl: false
@@ -329,7 +314,7 @@ function populateInfowindow(marker, infoWindow, photoURL) {
       markerHours = 'Hours not available.';
     } else {
       markerHours = '<em class="loc-closed">Closed now.</em>';
-    };
+    }
 
     var rating;
     if (marker.rating === 'N/A') {
@@ -339,12 +324,8 @@ function populateInfowindow(marker, infoWindow, photoURL) {
     }
 
     var photo;
-    if (photoURL === '') {
-      photo = '';
-    } else {
-      photo = '<img src="' + photoURL + '" height="100"><br>'
-                + '<small><em>Photo by Foursquare API.</em></small> ';
-    };
+    photo = photoURL ? '<img src="' + photoURL + '" height="100"><br>'
+                + '<small><em>Photo by Foursquare API.</em></small> ' : '';
 
     infoWindow.setContent('<div><strong>' + marker.title + '</strong><br>'
                           + rating + '<br>'
